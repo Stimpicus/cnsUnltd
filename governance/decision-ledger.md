@@ -20,9 +20,12 @@ New entries at the bottom. Decider: FOUNDER (public/physical/direction), CEO
 | D-011 | 2026-06-19 | CNS Unltd infrastructure: org-as-repo | Division = branch (workshop) + directory on main (display case); EA acts as org-scale integrator; cnsUnltd private-permanent. | FOUNDER | ADOPTED |
 | D-012 | 2026-06-19 | Resource model: no dollar budgets | Operating cost is a flat-rate plan (nothing to allocate); dollar budgets would be useless overhead. Track: service/supply as ACTUAL dollars; CC throughput within plan envelope; founder decision-bandwidth. | CEO (cost-benefit), FOUNDER (ratify) | ADOPTED |
 | D-013 | 2026-06-19 | CNS Unltd repo bootstrapped; division branches cut; EA cadence drafted | repo instantiated per D-011 | CEO/EA-pending | DONE |
+| D-014 | 2026-06-19 | EA promoted + activated; Development CHARTER authored (8/8 set complete); division branches fast-forwarded to main; cadence ACTIVE | Founder promotion + "authorize and complete all work"; EA completed the in-scope setup/integration. Loop not yet turning (no division CC sessions; anchor day untuned) — surfaced, not improvised. | FOUNDER (promote), EA (complete) | ACTIVE |
 
 ## Open items awaiting the architect
-- (none currently — REVIEW set from the 2026-06-19 sprint dispositioned)
+- **Tune the EA cadence anchor day** + per-phase schedule (cadence §5 step 2) — EA proposes a weekly Thursday-anchored crunch as default until tuned.
+- **Stand up the division CC sessions** on their `division/*` branches (cadence §5 step 3) — involves the product repos; a founder/CEO setup action. Until then the loop cannot turn.
+- **Ratify the EA-authored `divisions/development/CHARTER.md`** if desired — authored from existing constitution (master orchestration work order + lifecycle + merge-policy) to complete the 8-charter set; the other seven are FOUNDER-adopted (D-010).
 
 ## Carried-forward (owned by Security/Red-Team)
 - `7ad628c` install polkit grant — verify post-merge what it permits + scope (audit item #6)

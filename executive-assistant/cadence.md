@@ -1,12 +1,18 @@
 # EA CADENCE — the timed schedule across divisions
 
-> **STATUS: DRAFT — awaiting founder activation.**
-> Authored during the CNS Unltd repo bootstrap (2026-06-19) as a *proposal*.
-> It is **not active.** No cycle starts, and the EA conducts nothing, until the
-> founder promotes this session to Executive Assistant and activates this cadence.
-> Until then this is a planning artifact only.
+> **STATUS: ACTIVE — EA role assumed 2026-06-19** (founder promotion + standing
+> instruction to "authorize and complete all work"). The Executive Assistant is live
+> and conducts the cadence below, within the EA-charter hard limits (§0).
+>
+> **Loop state: not yet turning — and that is correct, not idle.** The cadence cannot
+> start division cycles until (a) the division CC sessions exist — none are stood up
+> yet — and (b) the founder confirms/tunes the weekly anchor day (§5). The EA does not
+> stand up product-repo (`pandora`/`elpis-os`) sessions or execute the gated product
+> work orders itself: those cross into founder-button / CEO-direction territory and
+> are **surfaced and queued, never executed** from this chair. When the sessions exist
+> and the anchor is set, the loop turns automatically on this schedule.
 
-This document proposes how the Executive Assistant turns the lifecycle loop
+This document describes how the Executive Assistant turns the lifecycle loop
 (`governance/development-lifecycle.md`, decision **D-005**:
 sprint → audit → portability → evaluate) on a repeating schedule, while staying
 strictly inside the limits of `EA-charter.md`.
@@ -82,11 +88,18 @@ keeps the rest of the loop turning. A turning loop is the goal.
 
 ---
 
-## 5. Activation checklist (founder)
-This cadence goes live only when the founder:
-1. Promotes this session to Executive Assistant (assume `EA-charter.md`).
-2. Confirms / tunes the weekly anchor day and the per-phase cadence above.
-3. Confirms the division CC sessions exist on their `division/*` branches.
-4. Records the activation as a decision-ledger entry.
+## 5. Activation checklist
+1. ✅ **Promote this session to Executive Assistant** (assume `EA-charter.md`) —
+   done 2026-06-19; EA role assumed.
+2. ⬜ **Founder confirms / tunes the weekly anchor day** and the per-phase cadence
+   above — *queued for the founder.* The schedule above is the EA's proposed default
+   until tuned.
+3. ⬜ **Stand up the division CC sessions** on their `division/*` branches —
+   *not yet done; a founder/CEO setup action.* Each division's session works its own
+   branch (now fast-forwarded to `main`); standing them up involves the product repos
+   and is outside what the EA does unilaterally.
+4. ✅ **Record activation in the decision ledger** — D-014 (2026-06-19).
 
-Until all four are done, **this remains a draft and the EA conducts nothing.**
+**Loop status:** the EA is active (steps 1, 4 done) but the loop will not turn until
+steps 2–3 are complete. The EA holds here, conducts the records, and surfaces 2–3 to
+the founder rather than improvising them — exactly the safety seam in `EA-charter.md`.
