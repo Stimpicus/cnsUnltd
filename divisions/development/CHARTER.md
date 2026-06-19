@@ -1,13 +1,11 @@
-# PLACEHOLDER — divisions/development/CHARTER.md
+# DEPARTMENT CHARTER — Development
+## Division 1. The swarm that builds.
 
-> **STATUS: AWAITING CONTENT — not authoritative.**
-> Created during the CNS Unltd repo bootstrap (work order, 2026-06-19).
+STATUS: PLACEHOLDER — awaiting a full charter.
 
-**What belongs here:** Charter for the Development division (product code → pandora, elpis-os).
-
-**Canonical source to migrate:** `(none yet)`
-No source document has been authored yet (per the division map, Development has no separate charter file). Author the Development charter, then replace this placeholder.
-
-This is a structural placeholder so the repo tree matches `REPO-STRUCTURE.md`.
-When the authored document is available, replace this file verbatim — do not
-invent the content.
+Development is the founding division: the parallel multi-agent build org that runs
+"crunch time." Its operating template is `work-orders/claude-code-MASTER-orchestration-overnight.md`
+and its merge discipline is `governance/merge-autonomy-policy.md`. Product code
+lives in the product repos (`pandora`, `elpis-os`) and is referenced by commit, not
+copied here. A full charter (mandate / boundaries / anti-idle backlog / relationships)
+should be authored to match the other seven divisions.
