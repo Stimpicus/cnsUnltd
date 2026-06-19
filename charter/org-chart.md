@@ -79,7 +79,7 @@ The org's divisions own the phases of the development loop:
                                                           → IP records the prior art
                                                           → DevRel preps the framing
 
-        ⟂ PUBLICATION GATE: IP-ready + Security-cleared + DevRel-framed + FOUNDER presses.
+        ⟂ PUBLICATION GATE: invention-#3 filed + IP-ready + Security-cleared + DevRel-framed + FOUNDER presses.   (#3-filed precondition added per D-018)
 ```
 
 ---

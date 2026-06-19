@@ -51,8 +51,9 @@ Its product is **a decision-ready dossier** — never a legal opinion.
 ## 4. THE LINE IT HOLDS
 - **Coordinates; never counsels.** (See §1 — the defining boundary.)
 - **Never triggers disclosure or a repo-going-public on its own** — that's a
-  founder-pressed, multi-organ-gated act (IP-ready + Security-cleared + founder-
-  disposed). This division confirms the IP precondition; it does not press publish.
+  founder-pressed, multi-organ-gated act (**invention-#3 filed** + IP-ready +
+  Security-cleared + DevRel-framed + founder-disposed; the #3-filed precondition per
+  **D-018**). This division confirms the IP precondition; it does not press publish.
 - **Distribution stays on hold until the founder + counsel clear it** — the standing
   hard constraint; development continues freely within that boundary.
 

@@ -19,7 +19,7 @@ Read this, not the eight documents. Every per-division claim is cited in its own
 - **CLEAN on everything landed.** No keys, tokens, JWTs, hashes, MACs, credentials, or full IPs on `main`
   (staged-index scan + post-merge defense-in-depth sweep). The one real-secret hit (Infra's full IPs) was caught and withheld.
 - The `.180` *nickname* appears in 5 divisions' clean docs — acceptable per the standing ruling (nickname OK in
-  operational docs; full IPs are not). One finding *about* a key (`_publisher.key`, in elpis-os) is reported by Infra/Security as
+  operational docs; full IPs are not). One finding *about* the build-publisher private key (in elpis-os) is reported by Infra/Security as
   **gitignored + untracked, no leak** — no key material present.
 
 ## Gated touched: **NONE**  ·  Loop started: **NO**

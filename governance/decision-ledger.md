@@ -22,21 +22,26 @@ New entries at the bottom. Decider: FOUNDER (public/physical/direction), CEO
 | D-013 | 2026-06-19 | CNS Unltd repo bootstrapped; division branches cut; EA cadence drafted | repo instantiated per D-011 | CEO/EA-pending | DONE |
 | D-014 | 2026-06-19 | EA promoted + activated; Development CHARTER authored (8/8 set complete); division branches fast-forwarded to main; cadence ACTIVE | Founder promotion + "authorize and complete all work"; EA completed the in-scope setup/integration. Loop not yet turning (no division CC sessions; anchor day untuned) — surfaced, not improvised. | FOUNDER (promote), EA (complete) | ACTIVE |
 | D-015 | 2026-06-19 | Founding intake: 8/8 division founding-cycle status docs integrated to main; 1 supplementary deliverable (infra fleet-inventory) WITHHELD (full fleet IPs) + routed back; consolidated rollup authored | First real turn of the coordination machine. Disjoint-path merges under the secret+sanity gate; gate caught Infra's full IPs. No gated op; no BLOCK disposed; loop not started. | EA (intake) | DONE |
+| D-016 | 2026-06-19 | Security FLAG-1 BLOCK ACCEPTED — `dispatchToOwners`-over-substrate **deployment** blocked until H-17 (unauth confirm → critical actuation) is fixed | Does NOT block building the fix; Dev's threat-informed first cycle prioritizes H-17 so the BLOCK can lift | FOUNDER | ACTIVE BLOCK |
+| D-017 | 2026-06-19 | Pandora REVIEW set CONFIRMED for landing — integrator lands the clean trunk security fixes (bind-loopback, setToken guard, capability-descriptor system) under the gate; Lane A device-control sequenced by Dev+Security around the H-17 fix | Back-fills approvals settled in the founding conversation but never recorded; D-016 governs that path's deployment regardless; bind deploy stays separately gated | FOUNDER | CONFIRMED — integrator lands clean trunk under the gate (founder reachable preferred for product-repo merges; no unattended rush) |
+| D-018 | 2026-06-19 | Invention #3 files BEFORE article publication (regardless of strict necessity) — now a HARD PRECONDITION on the publication gate | Founder ruling; resolves the #3-vs-publication sequencing | FOUNDER | ADOPTED |
+| D-019 | 2026-06-19 | Board-hygiene guard ADOPTED — Infra-built `board-hygiene-scan.sh` wired as the EA integration gate; bundle promoted to `governance/board-hygiene/`; deliverable-spec gains the rule | Founder-endorsed, Infra-built (proven to catch this cycle's incident); makes the live-box-identifier policy mechanical, not EA-eye-dependent | FOUNDER (endorsed) + CEO (switch-on) | ADOPTED |
 
 ## Open items awaiting the architect
 *(Full decision-ready detail batched in `executive-assistant/founding-intake-rollup.md`.)*
+**Dispositioned this session:** FLAG-1 → **D-016** (BLOCK accepted); pandora REVIEW set → **D-017** (confirmed for landing); #3-vs-publication → **D-018** (#3 files first); board-hygiene guard → **D-019** (adopted); D-008 → clarified by the note below. Still owed:
 - **Turn the loop? + cadence anchor day** (cadence §5) — EA default: weekly Thursday-anchored crunch until tuned. **Prerequisite below.**
 - **PREREQUISITE — fix session isolation before standing up sessions** (Infra R-5 / Security FLAG-3): the 8 sessions share one working clone; HEAD races landed a commit on the wrong branch this cycle. Recommended: per-session `git worktree`. Turning the loop onto the shared clone reproduces the defect at 8× concurrency.
-- **Security FLAG-1 — recommended standing BLOCK** (routed by the EA, only the founder disposes): do not ship `dispatchToOwners`-over-substrate / enable a `critical` capability whose nonce reaches an unauthenticated writer until the H-17 fix (N1) lands.
-- **pandora REVIEW-set disposition** — ≥ authorize Development to prepare the single collapsed `preview/trunk-capability` for one-decision review (the keystone the highest-value work sits on).
 - **Codename → public name** (Docs DR7 + Design D-1, one decision); **pandora LICENSE choice** (Docs D-2 + IP/Legal).
-- **Durable build/dev host** — `.180` vs revive dev VM vs dedicated builder (Infra #1).
-- **IP sequencing** — invention-#3 filing vs article publication (counsel + founder); + June-12 attorney-meeting outcome; + what "SpaceChatDB" is (IP/Legal).
+- **Durable build/dev host** — `.180` vs revive dev VM vs dedicated builder (Infra #1). Unblocks the D-008 bakes *once a host exists* (see the D-008 note below).
+- **IP inputs still owed** (sequencing now set by D-018): the **June-12 attorney-meeting outcome** + **what "SpaceChatDB" is** (IP/Legal).
 - **Permanent home for the unversioned security KB** (`C:\GitRepos\overnight\` is a SPOF — Security FLAG-4).
-- **Reconcile ledger D-008** ("mkosi absent" is stale vs repo reality — record-only; bakes stay BLOCKED on libndk).
 - **Ratify the EA-authored `divisions/development/CHARTER.md`** if desired (the other seven are FOUNDER-adopted, D-010).
-- **Re-push: Infra fleet-inventory deliverable** with full IPs genericized to nicknames (withheld this intake).
+- **Infra fleet-inventory deliverable** — Infra masked the IPs on-branch (commit `3417624`); available for a normal intake next cycle (was withheld in D-015).
 
 ## Carried-forward (owned by Security/Red-Team)
 - `7ad628c` install polkit grant — verify post-merge what it permits + scope (audit item #6)
 - H-9 §2 verifier sweep; H-4 / H-11 / H-15 hardening backlog
+
+## Clarifying notes (do not rewrite ratified rows)
+- **Note on D-008 (2026-06-19, EA-recorded per founder direction).** The "mkosi absent" premise referred to a reachable, durable build **host** — still true (the dev VM is unreachable; there is no image-build CI). The divisions found mkosi **config present in-repo** (`elpis-os/build/mkosi/*`) — a *different layer*. The BLOCKED bakes remain blocked pending a **durable build host** (founder resourcing, owed), **not** pending mkosi config. Re-evaluate the bakes once a durable host exists. **Original D-008 stands as recorded;** this note clarifies the layer — it does not reopen or rewrite it.
