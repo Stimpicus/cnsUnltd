@@ -9,11 +9,15 @@ reads). No state was mutated on any box. Supporting artifact for
 
 ## 1. The fleet (reachability + health)
 
-| Box | Handle | Address | Reachable | Notes |
-|---|---|---|---|---|
-| RTX 3090 reference box | `.180` | 192.168.50.180 | **YES** | healthy daily-driver; full read-only snapshot below |
-| Intel 155H laptop | `.196` | 192.168.50.196 | **NO** | no ICMP response — powered off or off-network |
-| Hyper-V dev VM (the mkosi build host) | dev VM | 172.24.127.163 | **NO** | no ICMP response — VM not running / unreachable from this host |
+| Box | Handle | Reachable | Notes |
+|---|---|---|---|
+| RTX 3090 reference box | `.180` | **YES** | healthy daily-driver; full read-only snapshot below |
+| Intel 155H laptop | `.196` | **NO** | no ICMP response — powered off or off-network |
+| Hyper-V dev VM (the mkosi build host) | dev VM | **NO** | no ICMP response — VM not running / unreachable from this host |
+
+*Boxes are referenced by handle only. Full live-box network identifiers (LAN IPs)
+are deliberately kept out of cnsUnltd per standing policy — connection details
+live in box-local ops material, not on the org board.*
 
 ### `.180` read-only health snapshot
 - **OS/kernel:** Ubuntu 24.04.4 LTS, `6.8.0-124-generic`, x86_64
@@ -67,17 +71,19 @@ reads). No state was mutated on any box. Supporting artifact for
   (TIER-1 AUTO criterion #2); it is referenced but not implemented anywhere.
 
 ## 5. Secret hygiene (incidental finding, routed to Security)
-- `elpis-os/build/components-dist/_publisher.key` is a `BEGIN PRIVATE KEY`
-  (component-publisher signing key). It is **NOT git-tracked** and is **covered by
-  `.gitignore:46` (`build/components-dist/`)** — a local build artifact, verified
-  un-committable. The neighboring `*.pem` is the matching `BEGIN PUBLIC KEY`
-  (content-addressed). **No leak.** Visibility flag only.
+- The component-publisher private key under `elpis-os/build/components-dist/` is a
+  local build artifact. It is **NOT git-tracked** and is **covered by
+  `.gitignore:46` (`build/components-dist/`)** — verified un-committable. The
+  matching public key beside it is content-addressed and ships in the image.
+  **No leak.** Visibility flag only (the directory is gitignored as a whole; no
+  key filename is named here by design).
 
 ## 6. Usage-envelope / credit monitoring
 - Assigned to this division by `governance/resource-model.md` §2 ("Infrastructure/
   Platform owns watching this"). **No tooling exists yet** — greenfield.
 
 ---
-*All addresses are private-LAN operational facts (already referenced by handle in
-the master orchestration WO P-1), not credentials. No key material, token, or
-credential is reproduced in this document.*
+*This is the **v0 fleet/build baseline** — a dated, immutable snapshot intended to
+be diffed (not edited) by later cycles. Boxes are referenced by handle only; full
+live-box identifiers (LAN IPs) and key filenames are deliberately kept off the org
+board per standing policy. No key material, token, or credential is reproduced here.*
