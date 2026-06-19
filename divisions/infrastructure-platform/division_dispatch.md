@@ -5,9 +5,9 @@ issuer: infrastructure-platform
 to: EA
 command: status
 wo: -
-step: -
-timestamp: 2026-06-19T12:31:12Z
-nonce: 61eb6744
+step: 5c3fb6b0
+timestamp: 2026-06-19T12:57:10Z
+nonce: 5dcee691
 ```
 
-state: bus built; listener ready for Phase-1 handshake
+state: branch=acf1fd3; bus self-test ok; listener live
