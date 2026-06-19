@@ -24,7 +24,7 @@ environment, the CI substrate, the agent-orchestration platform + usage envelope
 | Orchestration host | 🟢 **GOOD** | 24c/63G, 504 GiB free — headroom for the swarm + a local build |
 | Session isolation | 🔴 **DEFECT** | division sessions share ONE git clone → `HEAD` races → commits land on the wrong branch (hit live this cycle) |
 | Usage-envelope monitor | ⚪ **GREENFIELD** | assigned to Infra by resource-model §2; **no tooling exists yet** |
-| Secret hygiene (build keys) | 🟢 **CLEAN** | `_publisher.key` is gitignored + untracked — no leak (Security visibility flag) |
+| Secret hygiene (build keys) | 🟢 **CLEAN** | build-publisher private key is gitignored + untracked — no leak (Security visibility flag) |
 
 **The one sentence:** the historical ship-blocker has moved from *"mkosi absent"*
 to *"mkosi present but fragile and non-durable"* — it lives entirely on a single,
