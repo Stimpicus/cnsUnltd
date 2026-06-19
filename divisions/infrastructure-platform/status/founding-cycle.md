@@ -22,6 +22,7 @@ environment, the CI substrate, the agent-orchestration platform + usage envelope
 | mkosi build path | 🟡 **PRESENT-BUT-FRAGILE** | builds on one VM, mkosi 20.x + uncommitted stopgap, no CI, SPOF |
 | CI substrate | 🟡 **PARTIAL** | both repos have Actions CI; **no image-build CI**; `ci-verify.sh` absent |
 | Orchestration host | 🟢 **GOOD** | 24c/63G, 504 GiB free — headroom for the swarm + a local build |
+| Session isolation | 🔴 **DEFECT** | division sessions share ONE git clone → `HEAD` races → commits land on the wrong branch (hit live this cycle) |
 | Usage-envelope monitor | ⚪ **GREENFIELD** | assigned to Infra by resource-model §2; **no tooling exists yet** |
 | Secret hygiene (build keys) | 🟢 **CLEAN** | `_publisher.key` is gitignored + untracked — no leak (Security visibility flag) |
 
@@ -146,6 +147,17 @@ capability **durable, reproducible, and reachable** is this division's #1 job.
 3. **Reconcile ledger D-008** (EA/founder write): "mkosi absent" is contradicted by
    the repo. Reconciling corrects the record only — it does **not** unblock the
    bakes (still blocked on libndk license).
+4. **Isolate division sessions (urgent platform fix — see R-5).** The sessions share
+   one `cnsUnltd` working clone; `HEAD` is global, so under concurrency a commit
+   lands on whichever branch another session just checked out. **This happened this
+   cycle** — my founding commit briefly landed on `division/ip-legal-strategy`
+   (contained, local-only, reverted; nothing reached origin). Options: **(a)
+   per-session `git worktree`** [recommended — one command per division, isolated
+   `HEAD`/index/working-tree, shared object store; I used it to land this very
+   commit safely], (b) **a separate clone per session** [heavier; full duplication],
+   (c) **serialize commits org-wide** [kills the parallelism the swarm exists for].
+   *Forecloses:* leaving it unfixed means every division's Rule-2/Rule-3 hygiene is
+   one race away from silent cross-branch contamination.
 
 ## RISKS / FLAGS
 
@@ -157,6 +169,12 @@ capability **durable, reproducible, and reachable** is this division's #1 job.
   in dev working trees; **verified gitignored + untracked** in `elpis-os`. No leak;
   routed to Security for awareness, no action requested.
 - **R-4 (LOW, RECORD):** ledger D-008 "mkosi absent" is stale vs repo reality.
+- **R-5 (HIGH, PLATFORM/PROCESS):** division sessions share one `cnsUnltd` working
+  clone → global `HEAD` race → commits can land on the wrong branch. **Observed
+  live this cycle** (my commit briefly on `division/ip-legal-strategy`; contained,
+  local-only, reverted; origin never touched). Threatens Rule-2/Rule-3 hygiene
+  org-wide. Fix in decision #4 (per-session worktrees). I adopted a worktree to land
+  this update safely.
 
 ---
 
