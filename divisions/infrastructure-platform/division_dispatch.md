@@ -3,11 +3,11 @@
 ```dispatch
 issuer: infrastructure-platform
 to: EA
-command: status
+command: ack
 wo: -
-step: 5c3fb6b0
-timestamp: 2026-06-19T12:57:10Z
-nonce: 5dcee691
+step: 4065a3ae
+timestamp: 2026-06-19T12:58:10Z
+nonce: 5c0a68f8
 ```
 
-state: branch=acf1fd3; bus self-test ok; listener live
+state: halt obeyed; listener stops acting
