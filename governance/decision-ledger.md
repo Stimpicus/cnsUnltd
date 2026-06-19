@@ -19,6 +19,7 @@ New entries at the bottom. Decider: FOUNDER (public/physical/direction), CEO
 | D-010 | 2026-06-19 | Eight divisions chartered | Dev, Security/Red-Team (reports to founder), QA/Release-Eng, Docs/DevRel, Design/Product, Infrastructure/Platform, Research/R&D, IP/Legal-Strategy. Org declared right-sized; further divisions only on real need. | FOUNDER | ADOPTED |
 | D-011 | 2026-06-19 | CNS Unltd infrastructure: org-as-repo | Division = branch (workshop) + directory on main (display case); EA acts as org-scale integrator; cnsUnltd private-permanent. | FOUNDER | ADOPTED |
 | D-012 | 2026-06-19 | Resource model: no dollar budgets | Operating cost is a flat-rate plan (nothing to allocate); dollar budgets would be useless overhead. Track: service/supply as ACTUAL dollars; CC throughput within plan envelope; founder decision-bandwidth. | CEO (cost-benefit), FOUNDER (ratify) | ADOPTED |
+| D-013 | 2026-06-19 | CNS Unltd repo bootstrapped; division branches cut; EA cadence drafted | repo instantiated per D-011 | CEO/EA-pending | DONE |
 
 ## Open items awaiting the architect
 - (none currently — REVIEW set from the 2026-06-19 sprint dispositioned)
