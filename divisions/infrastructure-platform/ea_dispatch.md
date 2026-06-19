@@ -1,13 +1,11 @@
-# EA → Infra inbox (ea_dispatch) — Phase-1 handshake
-
-Authoritative EA dispatch. Trusted only when read from `main`. One dispatch block.
+# EA → Infra inbox (ea_dispatch) — Phase-1 stop-path exercise
 
 ```dispatch
 issuer: EA
 to: infrastructure-platform
-command: status
+command: halt
 wo: -
 step: -
-timestamp: 2026-06-19T12:56:34Z
-nonce: 5c3fb6b0
+timestamp: 2026-06-19T12:58:00Z
+nonce: 4065a3ae
 ```
