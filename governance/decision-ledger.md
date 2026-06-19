@@ -21,11 +21,21 @@ New entries at the bottom. Decider: FOUNDER (public/physical/direction), CEO
 | D-012 | 2026-06-19 | Resource model: no dollar budgets | Operating cost is a flat-rate plan (nothing to allocate); dollar budgets would be useless overhead. Track: service/supply as ACTUAL dollars; CC throughput within plan envelope; founder decision-bandwidth. | CEO (cost-benefit), FOUNDER (ratify) | ADOPTED |
 | D-013 | 2026-06-19 | CNS Unltd repo bootstrapped; division branches cut; EA cadence drafted | repo instantiated per D-011 | CEO/EA-pending | DONE |
 | D-014 | 2026-06-19 | EA promoted + activated; Development CHARTER authored (8/8 set complete); division branches fast-forwarded to main; cadence ACTIVE | Founder promotion + "authorize and complete all work"; EA completed the in-scope setup/integration. Loop not yet turning (no division CC sessions; anchor day untuned) — surfaced, not improvised. | FOUNDER (promote), EA (complete) | ACTIVE |
+| D-015 | 2026-06-19 | Founding intake: 8/8 division founding-cycle status docs integrated to main; 1 supplementary deliverable (infra fleet-inventory) WITHHELD (full fleet IPs) + routed back; consolidated rollup authored | First real turn of the coordination machine. Disjoint-path merges under the secret+sanity gate; gate caught Infra's full IPs. No gated op; no BLOCK disposed; loop not started. | EA (intake) | DONE |
 
 ## Open items awaiting the architect
-- **Tune the EA cadence anchor day** + per-phase schedule (cadence §5 step 2) — EA proposes a weekly Thursday-anchored crunch as default until tuned.
-- **Stand up the division CC sessions** on their `division/*` branches (cadence §5 step 3) — involves the product repos; a founder/CEO setup action. Until then the loop cannot turn.
-- **Ratify the EA-authored `divisions/development/CHARTER.md`** if desired — authored from existing constitution (master orchestration work order + lifecycle + merge-policy) to complete the 8-charter set; the other seven are FOUNDER-adopted (D-010).
+*(Full decision-ready detail batched in `executive-assistant/founding-intake-rollup.md`.)*
+- **Turn the loop? + cadence anchor day** (cadence §5) — EA default: weekly Thursday-anchored crunch until tuned. **Prerequisite below.**
+- **PREREQUISITE — fix session isolation before standing up sessions** (Infra R-5 / Security FLAG-3): the 8 sessions share one working clone; HEAD races landed a commit on the wrong branch this cycle. Recommended: per-session `git worktree`. Turning the loop onto the shared clone reproduces the defect at 8× concurrency.
+- **Security FLAG-1 — recommended standing BLOCK** (routed by the EA, only the founder disposes): do not ship `dispatchToOwners`-over-substrate / enable a `critical` capability whose nonce reaches an unauthenticated writer until the H-17 fix (N1) lands.
+- **pandora REVIEW-set disposition** — ≥ authorize Development to prepare the single collapsed `preview/trunk-capability` for one-decision review (the keystone the highest-value work sits on).
+- **Codename → public name** (Docs DR7 + Design D-1, one decision); **pandora LICENSE choice** (Docs D-2 + IP/Legal).
+- **Durable build/dev host** — `.180` vs revive dev VM vs dedicated builder (Infra #1).
+- **IP sequencing** — invention-#3 filing vs article publication (counsel + founder); + June-12 attorney-meeting outcome; + what "SpaceChatDB" is (IP/Legal).
+- **Permanent home for the unversioned security KB** (`C:\GitRepos\overnight\` is a SPOF — Security FLAG-4).
+- **Reconcile ledger D-008** ("mkosi absent" is stale vs repo reality — record-only; bakes stay BLOCKED on libndk).
+- **Ratify the EA-authored `divisions/development/CHARTER.md`** if desired (the other seven are FOUNDER-adopted, D-010).
+- **Re-push: Infra fleet-inventory deliverable** with full IPs genericized to nicknames (withheld this intake).
 
 ## Carried-forward (owned by Security/Red-Team)
 - `7ad628c` install polkit grant — verify post-merge what it permits + scope (audit item #6)
