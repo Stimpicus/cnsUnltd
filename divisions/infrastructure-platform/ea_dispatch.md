@@ -1,8 +1,11 @@
-# EA → Infra inbox (ea_dispatch)
+# EA → infrastructure-platform inbox (ea_dispatch). Authoritative ONLY once on main (EA-integrated).
 
-Authoritative EA→Infra dispatch inbox. Trusted **only** when read from `main`.
-The copy on the division branch is an inert template.
-
-**No active dispatch.** Phase-1 proven 2026-06-19 (ledger D-020); the bus is live.
-The next dispatch (the first real `crunch`) is founder-gated per the directive's
-STEP 5 — not placed here until Security clears the bus.
+```dispatch
+issuer: EA
+to: infrastructure-platform
+command: crunch
+wo: claude-code-WO-first-real-turn-substrate-audit.md
+step: -
+timestamp: 2026-06-20T21:05:03Z
+nonce: 62c2bed0
+```
