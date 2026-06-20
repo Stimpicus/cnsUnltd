@@ -6,8 +6,8 @@ to: EA
 command: ack
 wo: -
 step: 47a407ea
-timestamp: 2026-06-20T22:46:56Z
-nonce: 4401d7b1
+timestamp: 2026-06-20T22:47:21Z
+nonce: 4415e7b9
 ```
 
-state: crunch acknowledged on claude-code-WO-comms-discipline-bus-only.md; bounded branch work begins
+state: ack — comms-discipline (bus-only) directive received & understood; ACK-ONLY per WO, no branch work/deliverable; resuming listener loop
