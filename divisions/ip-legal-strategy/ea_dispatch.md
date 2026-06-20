@@ -4,8 +4,8 @@
 issuer: EA
 to: ip-legal-strategy
 command: crunch
-wo: claude-code-WO-first-real-turn-substrate-audit.md
+wo: claude-code-WO-comms-discipline-bus-only.md
 step: -
-timestamp: 2026-06-20T21:05:03Z
-nonce: 48af5e67
+timestamp: 2026-06-20T22:36:45Z
+nonce: 47a407ea
 ```

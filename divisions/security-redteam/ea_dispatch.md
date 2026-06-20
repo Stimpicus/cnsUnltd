@@ -4,8 +4,8 @@
 issuer: EA
 to: security-redteam
 command: crunch
-wo: claude-code-WO-first-real-turn-substrate-audit.md
+wo: claude-code-WO-comms-discipline-bus-only.md
 step: -
-timestamp: 2026-06-20T21:05:02Z
-nonce: 6838f750
+timestamp: 2026-06-20T22:36:43Z
+nonce: 453cabb2
 ```
