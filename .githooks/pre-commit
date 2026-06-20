@@ -1,15 +1,30 @@
 #!/bin/sh
 # cnsUnltd pre-commit hook (durable; wired via `git config core.hooksPath .githooks`).
 # Runs the committed secret-VALUE scanner on the staged diff. Identifier hygiene (LAN
-# IPs / MACs) remains the EA pre-integration DIRECTORY scan until the board-hygiene
-# `--staged` fix lands + Security signs off (branch fix/board-hygiene-staged).
+# IPs / MACs) remains the EA pre-integration DIRECTORY scan (the binding board gate).
 scanner="$(git rev-parse --show-toplevel)/governance/board-hygiene/secret-scan.sh"
+
 # Run via `sh` (not exec) and gate on EXISTENCE (-f), not the executable bit — the +x
-# test is unreliable on Windows working trees and would wrongly fall through to "allow"
-# (it let a probe secret through once during testing; never again). [-f]+sh is portable.
+# test is unreliable on Windows working trees and would wrongly fall through (it let a
+# probe secret through once during testing). [-f]+sh is portable.
 if [ -f "$scanner" ]; then sh "$scanner"; exit $?; fi
-# Branch predates the scanner (a stale, un-resynced division branch): degrade gracefully
-# rather than hard-fail with a cryptic exec error. The binding board gate is the EA
-# pre-integration DIRECTORY scan regardless.
-echo "cnsUnltd pre-commit: secret-scan.sh absent on this branch — re-sync to main." >&2
-exit 0
+
+# --- scanner ABSENT (a stale, un-resynced branch) ---------------------------------
+# FAIL CLOSED: a missing secret gate must NOT silently allow a commit. Exactly one
+# escape hatch, scoped to THIS absent-scanner case, and loudly AUDITED. It is an env
+# var read per-invocation — NOT a config setting — so it can never become a persistent,
+# always-on bypass; the next commit fails closed again unless the operator re-asserts it.
+if [ "${BOARD_HYGIENE_ALLOW_NO_SCANNER:-}" = "1" ]; then
+  printf '[AUDIT] cnsUnltd pre-commit: secret-scan.sh ABSENT — commit ALLOWED via BOARD_HYGIENE_ALLOW_NO_SCANNER override. user=%s branch=%s time=%s\n' \
+    "$(git config user.name 2>/dev/null || id -un 2>/dev/null)" \
+    "$(git rev-parse --abbrev-ref HEAD 2>/dev/null)" \
+    "$(date -u +%Y-%m-%dT%H:%M:%SZ 2>/dev/null)" >&2
+  exit 0
+fi
+
+printf 'cnsUnltd pre-commit BLOCKED: governance/board-hygiene/secret-scan.sh not found on this branch.\n' >&2
+printf '  The secret gate cannot run, so this commit is REFUSED (fail-closed).\n' >&2
+printf '  Fix: re-sync this branch to main (which carries the scanner).\n' >&2
+printf '  One-time escape ONLY if you accept the risk (it is audited to stderr):\n' >&2
+printf '    BOARD_HYGIENE_ALLOW_NO_SCANNER=1 git commit ...\n' >&2
+exit 1
