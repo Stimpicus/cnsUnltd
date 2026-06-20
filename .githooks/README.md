@@ -1,13 +1,18 @@
 # .githooks — cnsUnltd's durable hook directory
 
-**Wire it (ONCE per clone):** `git config core.hooksPath .githooks`
-The committed hooks then apply to that clone **and all its worktrees** (hooks resolve
-via the shared git dir). This is how the hook stays durable — it lives in the repo, not
-in an un-committed `.git/hooks/`.
+**Wire it (ONCE per clone) — use an ABSOLUTE path (rule R4):**
+`git config core.hooksPath "$(git rev-parse --show-toplevel)/.githooks"`
+A *relative* `.githooks` resolves per-worktree-top, so a worktree on a stale branch whose
+tree lacks `.githooks/` gets **no hook at all** — the gap the 8× wheel-turn surfaced
+(`D-035`, finding 2). An **absolute** path makes every worktree/branch find THIS hook file.
+The hook stays durable — it lives in the repo, not an un-committed `.git/hooks/`.
 
-- **`pre-commit`** → runs `governance/board-hygiene/secret-scan.sh` (secret-VALUE guard,
-  correct **diff-mode ERE**). Blocks a commit whose staged diff carries an embedded
-  key / token / secret value.
+- **`pre-commit`** → **branch-independent** (R4): resolves
+  `governance/board-hygiene/secret-scan.sh` from a fixed canonical source (`origin/main`,
+  else local `main`) — **never the per-branch tree** — and runs it (secret-VALUE guard,
+  correct **diff-mode ERE**) on the staged diff. So it gates even on a stale branch/worktree
+  whose own tree lacks the scanner. **Fails closed** if the canonical scanner is
+  unresolvable, with one scoped, audited `BOARD_HYGIENE_ALLOW_NO_SCANNER=1` override.
 
 **Not covered here, by design:** live-box **identifiers** (LAN IPs / MACs) — that is
 board-hygiene's job. Until the board-hygiene `--staged` fix lands + Security signs off
