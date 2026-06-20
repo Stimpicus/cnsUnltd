@@ -22,7 +22,7 @@ strictly inside the limits of `EA-charter.md`.
 ## 0. The hard limits this cadence operates under (from EA-charter.md)
 The EA **schedules and coordinates; it never authorizes.** This cadence may
 *kick off* division cycles and *integrate delivered* artifacts to `main` under
-the gate — nothing more. Specifically, activating this schedule does **not** grant
+the gate — **the integration gate is: secret-scan + `governance/board-hygiene/board-hygiene-scan.sh divisions/<name>/` (a BLOCK finding stops integration and routes back, exactly like a secret-scan hit) + structural sanity (no build/test on status docs)** — nothing more. Specifically, activating this schedule does **not** grant
 the EA the power to:
 - **Press a founder button** — flash, deploy, repo-public, disclosure, hardware
   spend, scaled deployment. These are *queued* for the founder; the founder presses.
