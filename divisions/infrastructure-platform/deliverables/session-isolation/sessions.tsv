@@ -1,0 +1,13 @@
+# cnsUnltd session registry — session-name <TAB> branch <TAB> role
+# Used by worktrees.sh to map a session to its workshop branch. Instruments and
+# crunch lanes are ad-hoc (provision <name> <branch> [--from <base>]) and need not
+# be listed here. The EA's branch is the CNS_EA_BRANCH knob (default main), not this row's literal.
+development	division/development	division
+security-redteam	division/security-redteam	division
+qa-release-eng	division/qa-release-eng	division
+docs-devrel	division/docs-devrel	division
+design-product	division/design-product	division
+infrastructure-platform	division/infrastructure-platform	division
+research-rnd	division/research-rnd	division
+ip-legal-strategy	division/ip-legal-strategy	division
+ea	main	integrator

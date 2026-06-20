@@ -1,0 +1,149 @@
+# Board-Hygiene Guard — proposal for org-wide adoption
+
+**From:** Infrastructure / Platform (Div 6) · **Status:** ready to adopt · 2026-06-19
+**Artifact:** `board-hygiene-scan.sh` (in this directory) — tested, self-testing.
+
+## The problem this closes
+Division deliverables are hand-written, and the standing policy that keeps
+**live-box identifiers** off the cnsUnltd board (full LAN IPs, MAC addresses,
+private-key files — box *nicknames* like `.180` are fine) was enforced only by the
+EA's eye. This cycle the Infra fleet deliverable carried real IPs and a key path;
+the EA caught it by reading. That's a single point of failure that doesn't scale to
+8 divisions × N cycles. The fix is to make the rule **mechanical** — the board
+analogue of the product repos' secret-scan (orchestration WO P-4).
+
+## What the guard does
+Exit-code-driven (`0` clean / `1` block), two tiers so it stays credible:
+
+- **BLOCK** (fails the scan): private/LAN IPv4 (RFC1918 + CGNAT + link-local),
+  MAC addresses, `BEGIN … PRIVATE KEY` banners, private-key file references, SSH
+  private-key filenames, and `secret/token/password/api_key =` assignments.
+- **WARN** (prints, does not fail): `.pem` references and absolute home/SSH paths.
+
+Deliberately **not** flagged: box nicknames (`.180`, `.196`, `dev VM`), hardware
+capacity facts (core/RAM/disk counts), kernel versions, and public/RFC5737
+documentation IPs (e.g. `203.0.113.x`) — none are live-box identifiers, so flagging
+them would erode trust in the guard.
+
+## Proof it works (run `--self-test`, or see the founding-cycle report)
+- `--self-test`: a clean fixture passes; a synthetic fixture covering all BLOCK
+  classes is blocked. Fixtures are assembled at runtime — no real identifier is
+  committed.
+- Run against the **pre-mask** Infra deliverable, it BLOCKs all three box IPs and
+  the key path. Against the **masked** version, CLEAN. It would have caught this
+  cycle's miss before commit.
+
+## Recommended wiring (two enforcement points)
+1. **EA integration gate (the chokepoint — highest leverage).** Before integrating
+   any `division/<name>` branch, the EA runs `board-hygiene-scan.sh divisions/<name>/`
+   and treats a BLOCK like a secret-scan hit: do not integrate; route back. This
+   catches the miss regardless of which division forgot — exactly where this cycle's
+   catch happened, now automated.
+2. **Per-division pre-commit (shift-left) — SUSPENDED (CEO directive 2026-06-19).**
+   The `--staged` mode is **HELD pending Security/Red-Team sign-off of its fix**: **do
+   NOT recommend or use `board-hygiene-scan.sh --staged` for pre-commit scanning** (nor
+   install it as a `core.hooksPath` hook) until Security confirms the fixed gate. Until
+   then the **EA integration gate (#1, directory mode) is the load-bearing backstop** —
+   it is unaffected by the `--staged` issue. Re-enable the shift-left hook only once
+   `--staged` is Security-cleared.
+
+## Promotion ask (founder / EA)
+- **Move** `board-hygiene/` from this division's `deliverables/` to a shared path on
+  `main` (suggest `governance/board-hygiene/`) so every division and the EA share one
+  copy.
+- **Ratify** a one-line addition to `governance/deliverable-spec.md` under "Format
+  discipline": *"Deliverables reference live boxes by nickname only; full LAN IPs,
+  MAC addresses, and private-key files never appear on the board. Enforced by
+  `governance/board-hygiene/board-hygiene-scan.sh` at integration."*
+- **Adopt** the EA integration gate (#1) as standing procedure.
+
+Merge ≠ ship still holds: this is a board-content guard, not a live operation. The
+"switch it on at integration" act is the EA's to make.
+
+## Boundary note
+The *policy* (what may appear on the board) is the founder/EA's to ratify; Infra
+owns the *tooling* that enforces it — same split as Infra owning CI runners while QA
+owns the gate logic. This guard is the tooling, offered for that ratification.
+
+---
+
+## EA addendum — switch-on + scope (2026-06-19, D-019)
+**Switched on** by the EA at integration (cadence §0). Promoted here from Infra's
+`deliverables/`. Two operating notes:
+1. **Gate scope is `divisions/<name>/` (division content) + new governance/EA board
+   content** — the chokepoint where this cycle's catch happened. The archival
+   `work-orders/` (founder-ratified **verbatim** records) are **out of scope**: a
+   full-board scan flags two bare software-key filename references there (H-13 finding
+   context — a software-key *filename*, not a live-box identifier or secret), which
+   are **accepted** under the verbatim-archival ruling and are NOT edited. Do not let
+   those two known hits block an integration.
+2. **The `--staged` mode is HELD pending Security sign-off (CEO directive 2026-06-19).**
+   Known issue: `--staged` self-trips at least on the commit that adds/edits this script
+   (its synthetic fixtures contain pattern literals; `--staged` does not self-skip the way
+   directory mode does), and its pre-commit reliability is under Security review. **Until
+   Security confirms the fixed gate, no shared doc recommends `--staged` for pre-commit,
+   and the EA (sole integrator) lands no `--staged` mechanism change.** The load-bearing
+   gate is **directory mode** at EA integration (#1) — that is what the EA runs, and it is
+   unaffected (every commit in this guard's history was dogfooded in directory mode).
+
+---
+
+## EA addendum — pre-commit hook + the ERE rule (D-030, 2026-06-20)
+Security found the `--staged` BRE bug (`finding-board-hygiene-staged-bre.md`): the mode
+deleted every added line and reported CLEAN unconditionally. EA disposition = **ACCEPT**.
+Resulting standing setup:
+1. **A working pre-commit hook is now wired** — `.githooks/pre-commit` →
+   `governance/board-hygiene/secret-scan.sh` (a correct **diff-mode ERE** secret-VALUE
+   guard), durable via `git config core.hooksPath .githooks` (see `.githooks/README.md`).
+   It covers secret *values*; it does **not** cover live-box *identifiers*.
+2. **Identifier hygiene stays the EA pre-integration DIRECTORY scan** — the binding board
+   gate — until the board-hygiene `--staged` fix (branch `fix/board-hygiene-staged`) is
+   **Security-signed-off** and landed.
+3. **Durable ERE rule (applies to every staged-content scan):** use **ERE** (`grep -E` /
+   `grep -vE`) or `gitleaks` — never bare BRE. Note the identical pitfall in the loose
+   `git grep --cached <pattern>` advice: **`git grep` defaults to BRE**, so `\+`/`\?`/`\|`
+   behave as operators, not literals. No shared doc may instruct a session to scan staged
+   content with a BRE command.
+
+---
+
+## Security addendum — the gate-resolution rule (R4) (2026-06-20)
+*Authored by Security/Red-Team after the branch-dependence sweep
+(`divisions/security-redteam/deliverables/sweep-branch-dependence-gates.md`); awaiting EA
+integration. Generalizes the ERE rule above: ERE governs **how** a checker matches; R4 governs
+**where the checker comes from** and **what happens when it is absent.***
+
+**Why:** three fail-opens this session traced to one root cause — a gate that resolved its
+checker from a **mutable, branch-dependent** location. A version-controlled tool (or a relative
+`core.hooksPath`) is **absent on any branch that predates it**, so a stale-branch commit runs
+**no gate at all**; and some gates then **passed (failed open)** when the checker could not be
+located.
+
+**Durable rule R4 — two clauses, both mandatory for every gate:**
+1. **Resolve the checker from a FIXED, canonical source** — an `origin/main` ref's object store
+   (`git show origin/main:<path>` / `git cat-file`), a self-contained inline implementation, or
+   an absolute pinned path. **Never** from the checked-out working tree
+   (`$(git rev-parse --show-toplevel)/…`, any relative path), and **never** via a relative
+   `core.hooksPath` pointing at version-controlled content. The working tree may be on any
+   branch or dirty; the canonical ref is identical everywhere.
+2. **Fail CLOSED.** If the checker cannot be resolved (missing, empty, unreadable), the gate
+   **BLOCKS** — it never passes an unverifiable change. Any escape hatch must be a
+   per-invocation, loudly-audited env var (never a persistent config), scoped to the
+   unresolvable-checker case only.
+
+**Applied this session:**
+- **`.githooks/pre-commit`** — *was* relative `core.hooksPath .githooks` + a `show-toplevel`
+  tree path (absent on stale branches). Fix: install in `.git/hooks/` (`core.hooksPath` unset),
+  resolve the scanner from `origin/main`'s object store, fail-closed with the audited
+  `BOARD_HYGIENE_ALLOW_NO_SCANNER=1` override. *(Security-authored; pending EA install +
+  post-install re-confirm.)*
+- **`worktrees.sh run_gates`** — *was* `$MAIN` working-tree resolution + `return 0` on a scanner
+  miss (fail-open). Fix `fix/worktrees-gate-failclosed`: resolves from `origin/main`'s object
+  store and **fails closed**. **Security-verified** (self-test 10/0; stale-branch staged secret
+  → BLOCK; unresolvable checker → fail-closed).
+- **`front1-pusher.sh`** — tree-relative resolution + a BRE silent-pass; **removed** with
+  `research-mathsavant`. If ever revived, it must follow R4.
+
+**Compliant by construction (no change needed):** `comms/bus.sh` (reads from `origin/main`) and
+`wheel-turn.sh` (uses `show-toplevel` only for a scratch dir; enforcement is delegated to
+`run_gates`).
