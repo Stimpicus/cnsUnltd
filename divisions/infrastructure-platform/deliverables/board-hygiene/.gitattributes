@@ -1,3 +1,0 @@
-# The guard is executed on Windows (Git Bash) and Linux CI runners alike — keep the
-# script LF so it never breaks with a CRLF `$'\r'` error after a Windows checkout.
-*.sh text eol=lf
