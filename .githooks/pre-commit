@@ -4,7 +4,10 @@
 # IPs / MACs) remains the EA pre-integration DIRECTORY scan until the board-hygiene
 # `--staged` fix lands + Security signs off (branch fix/board-hygiene-staged).
 scanner="$(git rev-parse --show-toplevel)/governance/board-hygiene/secret-scan.sh"
-if [ -x "$scanner" ]; then exec "$scanner"; fi
+# Run via `sh` (not exec) and gate on EXISTENCE (-f), not the executable bit — the +x
+# test is unreliable on Windows working trees and would wrongly fall through to "allow"
+# (it let a probe secret through once during testing; never again). [-f]+sh is portable.
+if [ -f "$scanner" ]; then sh "$scanner"; exit $?; fi
 # Branch predates the scanner (a stale, un-resynced division branch): degrade gracefully
 # rather than hard-fail with a cryptic exec error. The binding board gate is the EA
 # pre-integration DIRECTORY scan regardless.
