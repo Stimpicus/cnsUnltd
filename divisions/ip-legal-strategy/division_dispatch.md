@@ -3,11 +3,11 @@
 ```dispatch
 issuer: ip-legal-strategy
 to: EA
-command: status
+command: ack
 wo: -
-step: -
-timestamp: 2026-06-20T20:28:04Z
-nonce: 65325d6c
+step: 48af5e67
+timestamp: 2026-06-20T21:05:18Z
+nonce: 4699bf3b
 ```
 
-state: tuned in; ip-legal-strategy listener live (isolated worktree)
+state: crunch acknowledged on claude-code-WO-first-real-turn-substrate-audit.md; bounded branch work begins
