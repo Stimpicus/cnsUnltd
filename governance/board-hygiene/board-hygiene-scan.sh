@@ -8,10 +8,10 @@
 # EA's eye. It is the board analogue of the product repos' secret-scan (orchestration
 # WO P-4). The load-bearing enforcement point is:
 #   * by the EA, before integration:    board-hygiene-scan.sh divisions/<name>/
-# (FIX BRANCH: the --staged extraction now uses ERE — see extract_staged — and is guarded
-#  by a --staged regression in --self-test. This is the fix for the 2026-06 BRE bug. Until
-#  Security re-verifies + signs off and the EA lands this, per-division --staged stays
-#  advisory/SUSPENDED and the binding board gate remains directory mode.)
+# (The --staged extraction uses ERE — see extract_staged — and is guarded by a --staged
+#  regression in --self-test. This fixed the 2026-06 BRE bug; Security-signed-off + landed
+#  2026-06-20 (ledger D-031), the §7 BLOCK lifted. Per-division --staged is now a verified,
+#  advisory pre-commit mode; the binding board gate remains the EA directory scan.)
 #
 # EXIT:  0 = clean (WARN findings may print, do not fail) · 1 = BLOCK findings
 #        present (do not commit / integrate) · 2 = usage error.
