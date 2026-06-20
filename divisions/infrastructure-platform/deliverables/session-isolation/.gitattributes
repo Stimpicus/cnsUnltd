@@ -1,0 +1,4 @@
+# Provisioner runs on Windows (Git Bash) and Linux alike — keep scripts LF so they
+# never break with a CRLF `$'\r'` error after a Windows checkout.
+*.sh text eol=lf
+*.tsv text eol=lf
