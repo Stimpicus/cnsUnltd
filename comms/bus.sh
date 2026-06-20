@@ -14,12 +14,23 @@ REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || echo .)"
 FORBIDDEN='deploy|merge|flash|publish|push|apply|reboot|delete|rotate|sign|install|build'
 KEYS=(issuer to command wo step timestamp nonce)
 
+# ── Canonical division roster (DESIGN DECISION D2 — see dispatch-schema.md §Decisions) ──
+# AUTHORITATIVE source = the committed allowlist comms/divisions.list (a deliberate eight-
+# division roster). A division is recognised ONLY if it is on the list — adding one is a
+# conscious edit, never auto-absorbed from a new divisions/<name>/ dir. Auto-discovery is
+# demoted to a hygiene SENTINEL (the `sentinel` command) that FLAGS any divisions/*/ dir
+# absent from the list; the sentinel never grants membership.
+ROSTER_FILE="$REPO_ROOT/comms/divisions.list"
+roster()    { [ -f "$ROSTER_FILE" ] && grep -vE '^[[:space:]]*#|^[[:space:]]*$' "$ROSTER_FILE" | tr -d '\r' | awk 'NF{print $1}'; }
+on_roster() { [ -n "${1:-}" ] && roster | grep -qxF -- "$1"; }
+
 # ── Division identity (DESIGN DECISION D1 — see dispatch-schema.md §Decisions) ──
 # A spoke's own division = $BUS_DIV if set, else inferred from the current branch
-# (`division/<name>`). Always validated against `divisions/<name>/` existing, so a
-# typo or a forged name can never resolve. The EA hub never needs a self-division.
+# (`division/<name>`). Validated against the AUTHORITATIVE roster (on_roster), so a typo,
+# a forged name, or an undeclared divisions/*/ dir can never resolve. The EA hub never
+# needs a self-division.
 infer_div() { local b; b="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || true)"; case "$b" in division/*) echo "${b#division/}";; *) echo "";; esac; }
-valid_div() { [ -n "${1:-}" ] && [ -d "$REPO_ROOT/divisions/$1" ]; }
+valid_div() { on_roster "${1:-}"; }
 inbox_path()  { echo "divisions/$1/ea_dispatch.md"; }
 outbox_path() { echo "divisions/$1/division_dispatch.md"; }
 require_self_div() {
@@ -136,7 +147,7 @@ commit_outbox() {
 # ── Hub side (the EA: dispatch to any division, collect all outboxes) ──────────
 cmd_dispatch() { # <target-division> <verb> [wo]   — writes an EA→division ea_dispatch
   local target="${1:-}" verb="${2:-}" wo="${3:--}"
-  valid_div "$target" || { surface "unknown target division '${target:-}' (no divisions/$target/)"; return 2; }
+  valid_div "$target" || { surface "unknown target division '${target:-}' (not on comms/divisions.list — the authoritative roster)"; return 2; }
   case "$verb" in
     status|halt) wo="-";;
     crunch) { [ "$wo" != "-" ] && [[ "$wo" =~ ^[A-Za-z0-9._-]+$ ]]; } || { surface "crunch requires a wo id: dispatch $target crunch <wo>"; return 2; };;
@@ -154,16 +165,36 @@ cmd_dispatch() { # <target-division> <verb> [wo]   — writes an EA→division e
   surface "commit this to main to make it authoritative — only the EA integrates to main"
 }
 
-cmd_collect() { # read every division's outbox from its branch (hub liveness view)
+cmd_collect() { # read every ROSTERED division's outbox from its branch (hub liveness view)
   git fetch -q origin 2>/dev/null || true
   printf "%-26s %s\n" "division" "last-outbox-state (from origin/division/<name>)"
-  local d name ob state
-  for d in "$REPO_ROOT"/divisions/*/; do
-    name="$(basename "$d")"; [ -f "$d/CHARTER.MD" ] || [ -f "$d/CHARTER.md" ] || continue
+  local name ob state
+  while IFS= read -r name; do
     ob="$(git show "origin/division/$name:$(outbox_path "$name")" 2>/dev/null || true)"
     state="$(printf '%s\n' "$ob" | sed -n 's/^state: //p' | head -1)"
     printf "  %-24s %s\n" "$name" "${state:-<no outbox pushed>}"
+  done <<EOF
+$(roster)
+EOF
+}
+
+cmd_sentinel() { # hygiene: auto-discovery demoted to a DRIFT sentinel (never authoritative)
+  local rc=0 d name
+  # (a) PRIMARY — a divisions/*/ dir ABSENT from the authoritative list (stray / instrument / undeclared)
+  for d in "$REPO_ROOT"/divisions/*/; do
+    [ -d "$d" ] || continue
+    name="$(basename "$d")"
+    on_roster "$name" || { echo "[sentinel] DRIFT: divisions/$name/ exists but is ABSENT from comms/divisions.list (undeclared — instrument? stray?)"; rc=1; }
   done
+  # (b) advisory — a listed division with no divisions/*/ dir (declared but not materialised)
+  while IFS= read -r name; do
+    [ -n "$name" ] || continue
+    [ -d "$REPO_ROOT/divisions/$name" ] || { echo "[sentinel] DRIFT: '$name' is on comms/divisions.list but has no divisions/$name/ dir"; rc=1; }
+  done <<EOF
+$(roster)
+EOF
+  [ "$rc" -eq 0 ] && echo "[sentinel] clean: divisions/*/ and comms/divisions.list agree (every dir is a declared division)"
+  return "$rc"
 }
 
 self_test() {
@@ -187,6 +218,11 @@ self_test() {
   check 1 "INVALID"   inbound "issuer: EA" "to: $TEST_DIV" "command: crunch" "wo: -" "step: -" "timestamp: $TS" "nonce: $N"
   check 0 "OK status" outbound "issuer: $TEST_DIV" "to: EA" "command: status" "wo: -" "step: $N" "timestamp: $TS" "nonce: $N"
   check 1 "INVALID"   outbound "issuer: EA" "to: EA" "command: status" "wo: -" "step: -" "timestamp: $TS" "nonce: $N"
+  # ── D2 roster assertions: the authoritative allowlist + the drift sentinel ──
+  if on_roster "$TEST_DIV"; then pass=$((pass+1)); echo "  ok  : roster includes $TEST_DIV (allowlist authoritative)"; else fail=$((fail+1)); echo "  FAIL: roster missing $TEST_DIV"; fi
+  if on_roster research-mathsavant; then fail=$((fail+1)); echo "  FAIL: roster wrongly includes research-mathsavant (an instrument, not a division)"; else pass=$((pass+1)); echo "  ok  : roster excludes research-mathsavant (instrument, not a division)"; fi
+  if [ "$(roster | grep -c .)" -eq 8 ]; then pass=$((pass+1)); echo "  ok  : roster = exactly 8 divisions"; else fail=$((fail+1)); echo "  FAIL: roster = $(roster | grep -c .) entries, expected 8"; fi
+  if cmd_sentinel >/dev/null 2>&1; then pass=$((pass+1)); echo "  ok  : sentinel clean (divisions/*/ ⟷ divisions.list agree)"; else fail=$((fail+1)); echo "  FAIL: sentinel reports drift — $(cmd_sentinel 2>&1 | head -1)"; fi
   echo "self-test: $pass passed, $fail failed"; [ "$fail" -eq 0 ]
 }
 
@@ -197,6 +233,7 @@ case "${1:-}" in
   ready)       require_self_div; write_outbox status "-" "${2:-bus ready; $DIV listener live}"; echo "wrote $OUTBOX_PATH" ;;
   dispatch)    shift; cmd_dispatch "$@" ;;
   collect)     cmd_collect ;;
+  sentinel)    cmd_sentinel ;;
   *) cat >&2 <<'USAGE'
 usage: bus.sh <command>
   spoke (a division — identity from $BUS_DIV or the division/<name> branch):
@@ -205,7 +242,8 @@ usage: bus.sh <command>
     validate <file> [in|outbound]  validate a dispatch file
   hub (the EA):
     dispatch <division> <verb> [wo]  write an EA->division dispatch (verb: status|crunch|halt)
-    collect                          show every division's last outbox state
+    collect                          show every rostered division's last outbox state
+    sentinel                         hygiene: flag any divisions/*/ dir absent from divisions.list
   --self-test
 USAGE
      exit 2 ;;

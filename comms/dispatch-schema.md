@@ -105,9 +105,16 @@ Each ships with a defensible default so the bus is usable now; none is a silent 
   branch inference (default). Alt: an explicit `--div` on every call, or a registry
   lookup. *Rec: env-then-branch* — zero-config for a division on its own branch,
   explicit when off it (EA, CI, a feature branch).
-- **D2 — Canonical division list.** Auto-discovered from `divisions/*/` (default —
-  self-maintaining, no drift). Alt: a committed `comms/divisions.list`. *Rec:
-  auto-discover* unless a curated subset is ever needed.
+- **D2 — Canonical division list.** **DECIDED (founder, 2026-06-20): the committed
+  `comms/divisions.list` is the AUTHORITATIVE roster** — a deliberate eight-division
+  allowlist. A division is recognised (dispatch target, spoke self-identity, `collect`)
+  ONLY if it is on the list; adding one is a conscious edit, never auto-absorbed from a
+  new `divisions/<name>/` dir. **Auto-discovery is demoted to a hygiene sentinel**
+  (`bus.sh sentinel`) that FLAGS any `divisions/*/` dir absent from the list (a stray dir
+  or an R&D instrument like the former `research-mathsavant`); it never grants membership.
+  *Rationale:* an explicit allowlist is a deliberate control (the bus can never silently
+  absorb a non-division), while the sentinel preserves auto-discovery's only real value —
+  catching drift. Supersedes the earlier *auto-discover* default.
 - **D3 — Hub authority.** `dispatch` is a general command; its authority comes solely
   from the **main-integration chokepoint** (only the EA lands `ea_dispatch` on
   `main`), not from the command itself. *Rec: keep it there* — one proven chokepoint;
