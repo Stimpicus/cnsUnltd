@@ -61,3 +61,22 @@ are **not** removal candidates here — flagged for your awareness only:
 On your approval, Phase 4 is **reversible-only**: VM OFF → unregister → **move files to
 `C:\Hyper-V\_quarantine\`** (never `rm`). The permanent purge stays **your** keystroke
 after a cooling-off. **Until you approve, I delete and quarantine nothing.**
+
+---
+
+## Phase 4 — EXECUTED (founder-approved 2026-06-19) — reversible quarantine, nothing purged
+Founder approvals: (1) orphans → quarantine; (2) `elpis-final-test` → quarantine;
+(3) `Claude` VM → "kill it" (the out-of-scope unknown VM, founder-authorized);
+(4) no separate F2F VM. Standing condition honored: **nothing in active development impacted.**
+
+| Quarantined to `C:\Hyper-V\_quarantine\` | GB | How |
+|---|---|---|
+| `pandora-iso-test-orphans\` (v1 + v2) | 4.67 | moved (no VM owned them) |
+| `elpis-final-test\` (its vhdx) | 4.21 | VM OFF → `Remove-VM` (unregister) → moved |
+| `Claude\` (consolidated vhdx + small disks) | ~69.23 | VM OFF → `Remove-VM` → moved. **NB:** removing the VM merged its checkpoint chain into a single ~69 GB vhdx (normal Hyper-V consolidation — no data lost). |
+| **Total pending reclaim** | **78.11** | held in quarantine through cooling-off |
+
+**Verified after:** `elpis-dev` (ElpisOS) + `Pandora` (Pandora/F2F) still **Running,
+Operating normally, disks intact**; `pandora-iso-test4` (kept) intact; original locations
+cleared. **Nothing purged.** The permanent delete of `_quarantine\` (reclaiming 78.11 GB)
+is the **founder's keystroke** after the cooling-off confirms nothing broke.
