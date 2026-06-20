@@ -112,33 +112,32 @@ cmd_assert() {
   log "$name OK: $p on $branch"
 }
 
-# Locate the board-hygiene gate (post-promotion path first, then deliverables).
-find_gate() {
-  for c in "$MAIN/governance/board-hygiene/board-hygiene-scan.sh" \
-           "$SCRIPT_DIR/../board-hygiene/board-hygiene-scan.sh" \
-           "$MAIN/divisions/infrastructure-platform/deliverables/board-hygiene/board-hygiene-scan.sh"; do
-    [ -f "$c" ] && { echo "$c"; return; }
-  done
+# Resolve the canonical board-hygiene gate from origin/main's OBJECT STORE — branch-
+# independent (never reads a working tree, which may be on any branch or dirty); the
+# same shape as the bus reading its inbox from origin/main. Materializes it to a temp
+# file. Echoes the temp path on success; returns 1 (no output) if it can't be resolved.
+GATE_PATH_ON_MAIN_DEFAULT="governance/board-hygiene/board-hygiene-scan.sh"
+resolve_gate() {
+  local gp="${CNS_GATE_PATH:-$GATE_PATH_ON_MAIN_DEFAULT}" f
+  git -C "$MAIN" fetch -q origin main 2>/dev/null || true   # best-effort currency
+  f="$(mktemp)"
+  if git -C "$MAIN" show "origin/main:$gp" > "$f" 2>/dev/null && [ -s "$f" ]; then echo "$f"; else rm -f "$f"; return 1; fi
 }
 
-run_gates() { # worktree-path -> 0 clean / 1 blocked
-  # Extract the staged ADDED lines via `git -C` (Windows-path safe) and scan them in
-  # the gate's FILE mode. Do NOT `cd` into the worktree and use the gate's own
-  # `git diff` — a Windows-style worktree path (C:/...) does not `cd` to where
-  # `git -C` points, so the scan would silently see an empty diff.
-  # The canonical board-hygiene gate covers BOTH live-box identifiers AND secrets
-  # (private-key banners, token/secret assignments), so it is the single source of
-  # truth — no duplicate inline secret regex (which would self-trip the gate on its
-  # own pattern literals, and drift from the canonical rules).
-  local p="$1" gate tmp; gate="$(find_gate)"
-  [ -n "$gate" ] || { log "WARN: board-hygiene gate not found; board scan skipped"; return 0; }
-  tmp="$(mktemp)"
-  # NB: stage-2 MUST be `grep -Ev` (ERE). In BRE, GNU grep reads `\+` as the
-  # one-or-more quantifier, so `grep -v '^\+\+\+'` strips EVERY `+` line, not just
-  # the `+++` diff header — silently emptying the diff and passing dirty content.
-  git -C "$p" diff --cached -U0 | grep -E '^\+' | grep -Ev '^\+\+\+' | sed 's/^+//' > "$tmp"
-  if ! bash "$gate" "$tmp"; then rm -f "$tmp"; return 1; fi
-  rm -f "$tmp"
+run_gates() { # worktree-path -> 0 clean / 1 blocked.
+  # FAIL CLOSED: if the gate cannot be resolved, BLOCK the commit — never let an
+  # unverifiable diff land. The gate comes from origin/main's object store (canonical,
+  # branch-independent), not from any working tree. Staged ADDED lines are extracted
+  # via `git -C` (Windows-path safe) and scanned in the gate's FILE mode.
+  local p="$1" gatef difff
+  gatef="$(resolve_gate)" || { log "board-hygiene gate unresolvable from origin/main — FAIL CLOSED, commit blocked"; return 1; }
+  difff="$(mktemp)"
+  # NB: stage-2 MUST be `grep -Ev` (ERE). In BRE, GNU grep reads `\+` as the one-or-
+  # more quantifier, so `grep -v '^\+\+\+'` strips EVERY `+` line, not just the `+++`
+  # diff header — silently emptying the diff and passing dirty content.
+  git -C "$p" diff --cached -U0 | grep -E '^\+' | grep -Ev '^\+\+\+' | sed 's/^+//' > "$difff"
+  if ! bash "$gatef" "$difff"; then rm -f "$gatef" "$difff"; return 1; fi
+  rm -f "$gatef" "$difff"
 }
 
 cmd_commit() {
@@ -199,7 +198,8 @@ self_test() {
   t "std_path honors CNS_WT_ROOT"          '[ "$(CNS_WT_ROOT=/tmp/x std_path foo)" = "/tmp/x/foo" ]'
   t "unknown session rejected"             '! branch_for nope | grep -q .'
   t "lock acquire+release"                 'lock && unlock'
-  t "gate locatable on this branch"        '[ -n "$(find_gate)" ]'
+  t "gate resolves from origin/main"       'g="$(resolve_gate)"; r=$?; [ "$r" = 0 ] && [ -s "$g" ]; rr=$?; rm -f "$g" 2>/dev/null; [ "$rr" = 0 ]'
+  t "gate miss => run_gates FAILS CLOSED"  '! CNS_GATE_PATH=governance/board-hygiene/__nope__.sh run_gates "$MAIN"'
   t "diff-extract keeps +content drops +++ header" '[ "$(printf "+++ b/f\n+content line\n" | grep -E "^\+" | grep -Ev "^\+\+\+" | sed "s/^+//")" = "content line" ]'
   echo "self-test: $pass passed, $fail failed"; [ "$fail" -eq 0 ]
 }
