@@ -1,0 +1,3 @@
+# Hooks execute on Windows (Git Bash) and Linux — keep LF so they never break with a
+# CRLF `$'\r'` error after a Windows checkout.
+* text eol=lf
