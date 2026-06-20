@@ -174,3 +174,5 @@ until conditions 1–3 in §6 are met and I have re-verified.
   Given private-permanent + RFC1918, my recommendation is **ACCEPT-with-rationale**
   (a history rewrite of a private-permanent branch is high-cost / low-benefit); your
   call.
+  > **CLOSED 2026-06-20 — dispositioned ACCEPT (D-030, per CEO).** Nothing pending; the
+  > masked-at-tip history residue stands as accepted. This finding is fully closed out.
