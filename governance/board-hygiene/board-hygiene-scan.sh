@@ -8,9 +8,10 @@
 # EA's eye. It is the board analogue of the product repos' secret-scan (orchestration
 # WO P-4). The load-bearing enforcement point is:
 #   * by the EA, before integration:    board-hygiene-scan.sh divisions/<name>/
-# (Per-division `--staged` pre-commit use is SUSPENDED — held pending Security sign-off
-#  of the --staged fix, CEO 2026-06-19; do not use --staged for pre-commit until then.
-#  The --staged code path below is left intact for Security to fix/confirm, not removed.)
+# (FIX BRANCH: the --staged extraction now uses ERE — see extract_staged — and is guarded
+#  by a --staged regression in --self-test. This is the fix for the 2026-06 BRE bug. Until
+#  Security re-verifies + signs off and the EA lands this, per-division --staged stays
+#  advisory/SUSPENDED and the binding board gate remains directory mode.)
 #
 # EXIT:  0 = clean (WARN findings may print, do not fail) · 1 = BLOCK findings
 #        present (do not commit / integrate) · 2 = usage error.
@@ -48,6 +49,13 @@ scan_file() { # <label> <path>
   if [ -n "$w" ]; then printf '%s\n' "$w" | sed "s#^#warn   ${label}:#" >&2; fi
 }
 
+# Extract added content from a unified diff on stdin (the --staged extraction).
+# The second filter MUST be ERE (grep -vE): in BRE, `\+` is the one-or-more operator,
+# so '^\+\+\+' matches EVERY added line and the gate would scan nothing — the 2026-06
+# BRE bug (Security: finding-board-hygiene-staged-bre.md). The --self-test exercises
+# this pipeline directly so the broken path can never ship untested again.
+extract_staged() { grep -E '^\+' | grep -vE '^\+\+\+' | sed 's/^\+//'; }
+
 usage() { echo "usage: $SELF [--staged | --self-test | <file-or-dir>...]" >&2; exit 2; }
 
 case "${1:-}" in
@@ -66,10 +74,23 @@ case "${1:-}" in
     [ "$FOUND_BLOCK" -eq 0 ] && echo "self-test: clean fixture PASSED" || { echo "self-test FAIL: clean blocked"; exit 1; }
     FOUND_BLOCK=0; scan_file dirty "$tmp/dirty.md"
     [ "$FOUND_BLOCK" -eq 1 ] && echo "self-test: dirty fixture BLOCKED (ok)" || { echo "self-test FAIL: dirty not blocked"; exit 1; }
+    # --staged extraction regression (Security sign-off condition #2): feed a synthetic
+    # unified diff through the SAME extract_staged pipeline and assert a staged secret is
+    # caught. With the BRE bug, extract_staged empties the input and this drops to
+    # FOUND_BLOCK=0 — i.e. this test FAILS on the buggy script and PASSES on the fix.
+    printf '%s\n' 'diff --git a/x b/x' '--- a/x' '+++ b/x' '@@ -0,0 +1,2 @@' \
+      "+synthetic lan host 192.168.$o1.$o2" '+token=abc123XYZ789def' \
+      | extract_staged > "$tmp/staged-dirty.md"
+    FOUND_BLOCK=0; scan_file staged-regression-dirty "$tmp/staged-dirty.md"
+    [ "$FOUND_BLOCK" -eq 1 ] && echo "self-test: --staged extraction BLOCKED dirty diff (ok)" || { echo "self-test FAIL: --staged extraction dropped the secret (BRE regression)"; exit 1; }
+    printf '%s\n' 'diff --git a/y b/y' '+++ b/y' '@@ -0,0 +1 @@' '+box .180 reachable; nothing secret here' \
+      | extract_staged > "$tmp/staged-clean.md"
+    FOUND_BLOCK=0; scan_file staged-regression-clean "$tmp/staged-clean.md"
+    [ "$FOUND_BLOCK" -eq 0 ] && echo "self-test: --staged extraction clean diff PASSED (ok)" || { echo "self-test FAIL: --staged clean diff blocked"; exit 1; }
     echo "self-test: PASS"; exit 0 ;;
   --staged)
     tmp="$(mktemp -d)"; trap 'rm -rf "$tmp"' EXIT
-    git diff --cached -U0 | grep -E '^\+' | grep -v '^\+\+\+' | sed 's/^\+//' > "$tmp/staged.txt"
+    git diff --cached -U0 | extract_staged > "$tmp/staged.txt"
     scan_file "staged" "$tmp/staged.txt" ;;
   ""|-h|--help) usage ;;
   *)
