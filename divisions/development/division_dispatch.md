@@ -3,11 +3,11 @@
 ```dispatch
 issuer: development
 to: EA
-command: status
+command: ack
 wo: -
-step: 78a9c033
-timestamp: 2026-06-20T22:25:49Z
-nonce: 62a504ab
+step: 661c5438
+timestamp: 2026-06-20T22:38:25Z
+nonce: 5bdda545
 ```
 
-state: div=development branch=bb63c52; listener live
+state: crunch acknowledged on claude-code-WO-comms-discipline-bus-only.md; bounded branch work begins
