@@ -3,11 +3,11 @@
 ```dispatch
 issuer: development
 to: EA
-command: ack
+command: status
 wo: -
-step: 5d55c754
-timestamp: 2026-06-20T21:10:42Z
-nonce: 05b9ccd2
+step: 78a9c033
+timestamp: 2026-06-20T22:25:49Z
+nonce: 62a504ab
 ```
 
-state: crunch acked re 5d55c754 on claude-code-WO-first-real-turn-substrate-audit.md; state-of-substrate-development section produced on branch
+state: div=development branch=bb63c52; listener live
