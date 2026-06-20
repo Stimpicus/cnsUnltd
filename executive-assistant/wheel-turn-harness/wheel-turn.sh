@@ -63,10 +63,14 @@ lane() {
   local name="$1" branch="$2" bar="$3"
   local hb="divisions/$name/status/wheel-turn-test-$RUN_ID.md"
   local res="$bar/result.$name"
-  # 1) provision an isolated worktree for this lane (Infra's provisioner, black-box)
-  bash "$PROVISIONER" provision "$name" >>"$bar/log.$name" 2>&1 || { echo "FAIL provision" >"$res"; return; }
-  local wt; wt="$(bash "$PROVISIONER" list 2>/dev/null | awk -v b="[$branch]" '$0 ~ b {print $1; exit}')"
-  [ -n "$wt" ] && [ -d "$wt" ] || { echo "FAIL no-worktree" >"$res"; return; }
+  # 1) provision an isolated worktree for this lane (Infra's provisioner, black-box).
+  # cmd_provision echoes the worktree PATH on stdout (its logs go to stderr) — capture
+  # it directly. Do NOT re-derive via `list`+regex: a branch like division/development
+  # contains /,[,] and is not a literal regex (it becomes a char-class that mis-matches).
+  local wt
+  wt="$(bash "$PROVISIONER" provision "$name" 2>>"$bar/log.$name")" || { echo "FAIL provision" >"$res"; return; }
+  wt="$(printf '%s\n' "$wt" | tail -n1 | tr -d '\r')"
+  [ -n "$wt" ] && [ -d "$wt" ] || { echo "FAIL no-worktree[$wt]" >"$res"; return; }
   # 2) write the benign heartbeat in THIS lane's worktree
   mkdir -p "$wt/divisions/$name/status"
   printf '# wheel-turn heartbeat — %s\n\nBenign isolation/coordination test. Run %s. No payload.\nLane=%s branch=%s. Proves the lane committed to its OWN branch at 8x concurrency.\n' \
