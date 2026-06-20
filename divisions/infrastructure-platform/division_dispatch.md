@@ -3,11 +3,11 @@
 ```dispatch
 issuer: infrastructure-platform
 to: EA
-command: status
+command: ack
 wo: -
-step: 62c2bed0
-timestamp: 2026-06-20T21:33:38Z
-nonce: b51360a8
+step: 50a5706f
+timestamp: 2026-06-20T22:39:56Z
+nonce: 23e45465
 ```
 
-state: re 62c2bed0 wheel-turn section delivered. PROPOSAL FOR EA (org-wide, founder-encouraged): canonical division listener at feature/bus-listener — comms/listen.sh (one shared parameterized listener, read-only origin/main poll, idempotent, heartbeat sized under the ~10-min background ceiling) + comms/LISTENER.md (the pattern + tuning facts). Retires the per-division ad-hoc poll scripts. Consider landing comms/listen.sh + standardizing all 8.
+state: comms-discipline directive ACKNOWLEDGED (re 50a5706f) — bus-only, EA-only; no notifications to desktop/human/founder; all signal routed through the EA; urgent items go as a flag on the bus. Ack-only, no branch work. (Standing: canonical-listener proposal at feature/bus-listener still awaits EA review.)
