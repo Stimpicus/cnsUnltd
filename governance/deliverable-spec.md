@@ -29,3 +29,7 @@ not the board. **Surface decisions, not activity.**
   ask. (See the merge-digest as the canonical example: scorecard first, decisions
   isolated, everything else available but not in the way.)
 - No overclaiming. Green is earned, never reported. Blocked is stated plainly.
+- No live-box identifiers on the board: deliverables reference live boxes by nickname
+  only (`.180`, `.196`, "dev VM"); full LAN IPs, MAC addresses, key-file references,
+  and secrets never appear. Enforced by `governance/board-hygiene/board-hygiene-scan.sh`
+  at integration (a BLOCK finding stops integration, like a secret-scan hit).

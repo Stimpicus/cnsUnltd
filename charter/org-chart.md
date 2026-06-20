@@ -67,6 +67,23 @@ soften a security finding — it goes straight up.
 
 ---
 
+## R&D INSTRUMENTS (not divisions — scale to need, not template)
+
+A focused instrument hangs off its sponsoring division rather than becoming a new
+top-level division (and a new dispatch hub). It carries **no new authority**: the
+sponsor owns and reviews, the EA dispatches and integrates.
+
+| Instrument | Sponsor | Dispatch / integrate | Status |
+|---|---|---|---|
+| **mathSavantClaude** — verified-reasoning grinder: machine-checked coverage of *known* mathematics; explores dispatched open problems strictly within the deductive closure | **Research / R&D (Div 7)** | **EA, solely** (the one-hub write-to-execute defense) | **established · DORMANT** (D-021) — branch `instrument/mathsavant`; Front 1 (grind) ungated (needs only a dedicated worktree + Security sandbox sign-off); Front 2 (listener) wakes on bus go-live |
+
+Only machine-checked results are ever surfaced as results; silence is never a verdict
+(see `charter.md` on branch `instrument/mathsavant` — the instrument's canonical home;
+it has no `divisions/` directory on `main`, so the bus's D2 auto-discovered roster lists
+only the eight divisions).
+
+---
+
 ## THE DIVISIONS MAPPED TO THE LIFECYCLE
 
 The org's divisions own the phases of the development loop:
@@ -79,7 +96,7 @@ The org's divisions own the phases of the development loop:
                                                           → IP records the prior art
                                                           → DevRel preps the framing
 
-        ⟂ PUBLICATION GATE: IP-ready + Security-cleared + DevRel-framed + FOUNDER presses.
+        ⟂ PUBLICATION GATE: invention-#3 filed + IP-ready + Security-cleared + DevRel-framed + FOUNDER presses.   (#3-filed precondition added per D-018)
 ```
 
 ---

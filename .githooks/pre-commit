@@ -1,0 +1,48 @@
+#!/bin/sh
+# cnsUnltd pre-commit hook — BRANCH-INDEPENDENT (board-hygiene rule R4).
+#
+# Resolves the secret-VALUE scanner from a FIXED CANONICAL SOURCE — `main`'s object store
+# (origin/main, else local main) — NOT the working tree and NOT a relative core.hooksPath.
+# So it gates correctly even when committing on a stale branch or worktree whose tree
+# predates or lacks the scanner — the gap the 8x wheel-turn surfaced (D-035, finding 2):
+# stale division worktrees lacked `.githooks/` AND `secret-scan.sh`, so neither the hook
+# nor its gate fired. Resolving from canonical `main` closes that. The scanner is a
+# self-contained diff-mode scan (it runs `git diff --cached` itself), so piping it to `sh`
+# in the committing repo scans the live staged diff regardless of which branch is checked out.
+#
+# Fails CLOSED if the canonical scanner is unresolvable; one scoped, loudly-AUDITED override
+# for that case only (env var, per-invocation — never a persistent bypass).
+#
+# WIRING (per R4 — never a relative core.hooksPath): point core.hooksPath at an ABSOLUTE
+# path so every worktree/branch finds THIS hook file. See .githooks/README.md.
+
+canon_path="governance/board-hygiene/secret-scan.sh"
+
+scanner=""
+for ref in origin/main main; do
+  s="$(git show "$ref:$canon_path" 2>/dev/null)"
+  if [ -n "$s" ]; then scanner="$s"; break; fi
+done
+
+if [ -n "$scanner" ]; then
+  printf '%s\n' "$scanner" | sh
+  exit $?
+fi
+
+# --- canonical scanner UNRESOLVABLE (e.g. no main ref fetched) -------------------------
+# FAIL CLOSED. Exactly one escape hatch, scoped to THIS unresolvable case, loudly audited.
+if [ "${BOARD_HYGIENE_ALLOW_NO_SCANNER:-}" = "1" ]; then
+  printf '[AUDIT] cnsUnltd pre-commit: canonical secret-scan (main:%s) UNRESOLVABLE — commit ALLOWED via BOARD_HYGIENE_ALLOW_NO_SCANNER override. user=%s branch=%s time=%s\n' \
+    "$canon_path" \
+    "$(git config user.name 2>/dev/null || id -un 2>/dev/null)" \
+    "$(git rev-parse --abbrev-ref HEAD 2>/dev/null)" \
+    "$(date -u +%Y-%m-%dT%H:%M:%SZ 2>/dev/null)" >&2
+  exit 0
+fi
+
+printf 'cnsUnltd pre-commit BLOCKED: canonical secret-scan (main:%s) could not be resolved.\n' "$canon_path" >&2
+printf '  The secret gate cannot run, so this commit is REFUSED (fail-closed).\n' >&2
+printf '  Fix: `git fetch origin` so origin/main (which carries the scanner) resolves.\n' >&2
+printf '  One-time audited escape ONLY if you accept the risk (it is audited to stderr):\n' >&2
+printf '    BOARD_HYGIENE_ALLOW_NO_SCANNER=1 git commit ...\n' >&2
+exit 1
