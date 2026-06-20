@@ -78,7 +78,9 @@ sponsor owns and reviews, the EA dispatches and integrates.
 | **mathSavantClaude** — verified-reasoning grinder: machine-checked coverage of *known* mathematics; explores dispatched open problems strictly within the deductive closure | **Research / R&D (Div 7)** | **EA, solely** (the one-hub write-to-execute defense) | **established · DORMANT** (D-021) — branch `instrument/mathsavant`; Front 1 (grind) ungated (needs only a dedicated worktree + Security sandbox sign-off); Front 2 (listener) wakes on bus go-live |
 
 Only machine-checked results are ever surfaced as results; silence is never a verdict
-(see `divisions/research-mathsavant/charter.md`).
+(see `charter.md` on branch `instrument/mathsavant` — the instrument's canonical home;
+it has no `divisions/` directory on `main`, so the bus's D2 auto-discovered roster lists
+only the eight divisions).
 
 ---
 
