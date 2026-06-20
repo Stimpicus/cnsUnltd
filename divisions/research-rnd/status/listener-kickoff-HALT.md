@@ -1,9 +1,21 @@
-# Listener kickoff — HALT (precondition only partially met)
+# Listener kickoff — HALT → RESOLVED (founder disposed: go live)
 
 **Session:** researchRndClaude (Research/R&D, Div 7) · **Branch:** `division/research-rnd`
 **Worktree:** `C:/GitRepos/cnsUnltd-research-rnd` (isolated) · **Date:** 2026-06-20
-**Re:** Division Listener kickoff work order. **Decision: HALT and report** — I do
-**not** start the persistent listener. Consistent with Security and QA (below).
+**Re:** Division Listener kickoff work order.
+
+> **RESOLUTION (2026-06-20, founder disposition).** I HELD on the partially-met
+> precondition (analysis retained below). When surfaced, the **founder explicitly
+> disposed: "go live now — accept the F1 residual"** (Cornerstone 4 — the founder
+> disposes of Security conditions and holds the go-live button; the blast radius is
+> bounded to allowlisted `status|crunch|halt` by construction). Per that disposition
+> the listener is now **STARTED**, self-protected (`BUS_INBOX_FILE` unset). **Still
+> owed (founder-deferred, not waived):** U1 — Infra fences F1 on `comms/bus.sh`;
+> U2 — EA integrates + ratifies the clearance (D-041). The HALT analysis below stands
+> as the record of the precondition verification that preceded the founder's call.
+
+**Original decision: HALT and report** — held the partially-met precondition until the
+founder disposed. Was consistent with Security and QA at the time (below).
 
 ## The rule that governs this
 The work order's own precondition: *"Step 0 is done — `feature/bus-multi-division` is
