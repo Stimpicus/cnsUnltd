@@ -1,12 +1,16 @@
 # mathSavant Front 1 — Sandbox Runtime: build plan + status
 
-**STATUS: RUNTIME NOT YET INSTANTIATED.** The sandbox is a *ratified spec* (D-023,
-founder-affirmed) and the host-side pusher is built (`front1-pusher.sh`), but the
-**enforcement runtime does not exist yet.** The worktree
-(`C:/GitRepos/cnsUnltd-mathsavant-grind`, branch `instrument/mathsavant-grind` @
-`00936f8`) currently sits as a plain sibling on the bare host — full filesystem, full
-network. A session launched there is **unsandboxed**; the savant's startup check 3
-would (correctly) refuse to grind.
+**STATUS: RETRACTED — VM cage NOT built (D-025).** The founder determined the
+network-dark VM runtime is over-specified: the savant runs **directly on the host,
+alongside the other Claude Code directors** — its "sandbox" is the same model every
+director uses (a **dedicated worktree on its own branch**), which is already
+provisioned and verified (D-022). No VM, no network isolation, no runtime build.
+This plan is kept only as the record of the considered-and-dropped approach; the
+**network policy contradiction it surfaced** (a CC-session savant must reach the
+Anthropic API, so literal zero-egress is impossible) is what prompted the simplification.
+
+> The text below is the retracted VM design, preserved for the record. It is **not**
+> the operative model — see `front1-provisioning.md` and D-025.
 
 **Why this is prepared, not yet executed:** instantiating the cage is a privileged,
 hard-to-reverse mutation of a **live host running other VMs** (`elpis-dev`, `Pandora`),
