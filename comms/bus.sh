@@ -116,9 +116,14 @@ handle() { # enum -> handler. $wo is charset-validated, only path-checked + echo
 
 process() { # read inbox from MAIN (authoritative), validate, act once. $1=--dry-run skips push.
   local dry="${1:-}" inbox res rc blocks command wo step nonce issuer
-  if [ -n "${BUS_INBOX_FILE:-}" ]; then            # test-only seam
+  # F1 fence (Security STEP-5.1): the inbox is authoritative ONLY from origin/main. The
+  # BUS_INBOX_FILE seam is a TEST-ONLY substitute and is honored *only* when CNS_BUS_ALLOW_TEST_INBOX=1
+  # is also set — so a stray or forged BUS_INBOX_FILE in production can never substitute a forged
+  # inbox (the write-to-execute residual). Default/production path reads only origin/main.
+  if [ -n "${BUS_INBOX_FILE:-}" ] && [ "${CNS_BUS_ALLOW_TEST_INBOX:-}" = "1" ]; then   # test-only, gated
     inbox="$(cat "$BUS_INBOX_FILE" 2>/dev/null || true)"
   else
+    [ -n "${BUS_INBOX_FILE:-}" ] && surface "BUS_INBOX_FILE IGNORED — production reads only origin/main; set CNS_BUS_ALLOW_TEST_INBOX=1 to honor it in tests"
     git fetch -q origin main 2>/dev/null || { surface "fetch failed"; return 1; }
     inbox="$(git show "origin/main:$INBOX_PATH" 2>/dev/null || true)"
   fi
