@@ -23,6 +23,11 @@ isolation so the 8× swarm can run concurrently without the race.
 - **Validation — the EA-adjudicated 8× concurrent wheel-turn:** **NOT run.**
 - **Gating:** this is the first real-load `crunch` on the comms bus, reserved as a
   **founder-gated** step (bus STEP 5 / first wheel-turn). The founder presses.
+- **Candidate implementation (queued, NOT adjudicated — CEO 2026-06-19):** Infra's branch
+  `feature/session-isolation-provisioner` @ `840eef5` carries the provisioner work. It is
+  in the EA's hands for the **eventual** wheel-turn integration; per CEO direction it is
+  **not adjudicated yet** (no review, no integration decision) — it waits on the founder go
+  and the Security-cleared bus.
 
 ## Carried references
 - The bus it would ride: `comms/dispatch-schema.md`, `comms/bus.sh`.

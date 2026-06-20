@@ -6,9 +6,11 @@
 # nicknames (".180", ".196", "dev VM") are fine; the full identifier behind the
 # nickname is not. This guard makes that rule mechanical instead of relying on the
 # EA's eye. It is the board analogue of the product repos' secret-scan (orchestration
-# WO P-4), meant to run at two points:
-#   1. per-division, before a commit:   board-hygiene-scan.sh --staged
-#   2. by the EA, before integration:   board-hygiene-scan.sh divisions/<name>/
+# WO P-4). The load-bearing enforcement point is:
+#   * by the EA, before integration:    board-hygiene-scan.sh divisions/<name>/
+# (Per-division `--staged` pre-commit use is SUSPENDED — held pending Security sign-off
+#  of the --staged fix, CEO 2026-06-19; do not use --staged for pre-commit until then.
+#  The --staged code path below is left intact for Security to fix/confirm, not removed.)
 #
 # EXIT:  0 = clean (WARN findings may print, do not fail) · 1 = BLOCK findings
 #        present (do not commit / integrate) · 2 = usage error.

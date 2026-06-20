@@ -39,9 +39,13 @@ them would erode trust in the guard.
    and treats a BLOCK like a secret-scan hit: do not integrate; route back. This
    catches the miss regardless of which division forgot — exactly where this cycle's
    catch happened, now automated.
-2. **Per-division pre-commit (shift-left, optional).** Divisions run
-   `board-hygiene-scan.sh --staged` before committing (or install it as a
-   `core.hooksPath` pre-commit hook). Cheaper to catch at authoring time.
+2. **Per-division pre-commit (shift-left) — SUSPENDED (CEO directive 2026-06-19).**
+   The `--staged` mode is **HELD pending Security/Red-Team sign-off of its fix**: **do
+   NOT recommend or use `board-hygiene-scan.sh --staged` for pre-commit scanning** (nor
+   install it as a `core.hooksPath` hook) until Security confirms the fixed gate. Until
+   then the **EA integration gate (#1, directory mode) is the load-bearing backstop** —
+   it is unaffected by the `--staged` issue. Re-enable the shift-left hook only once
+   `--staged` is Security-cleared.
 
 ## Promotion ask (founder / EA)
 - **Move** `board-hygiene/` from this division's `deliverables/` to a shared path on
@@ -73,8 +77,11 @@ owns the gate logic. This guard is the tooling, offered for that ratification.
    context — a software-key *filename*, not a live-box identifier or secret), which
    are **accepted** under the verbatim-archival ruling and are NOT edited. Do not let
    those two known hits block an integration.
-2. **The `--staged` mode self-trips only on the commit that adds/edits this script
-   itself** (its synthetic fixtures contain pattern literals; `--staged` does not
-   self-skip the way directory mode does). For all other commits — including every
-   division's pre-commit use — `--staged` is correct. The commit that introduced this
-   guard was therefore dogfooded in **directory mode** over the changed board dirs (CLEAN).
+2. **The `--staged` mode is HELD pending Security sign-off (CEO directive 2026-06-19).**
+   Known issue: `--staged` self-trips at least on the commit that adds/edits this script
+   (its synthetic fixtures contain pattern literals; `--staged` does not self-skip the way
+   directory mode does), and its pre-commit reliability is under Security review. **Until
+   Security confirms the fixed gate, no shared doc recommends `--staged` for pre-commit,
+   and the EA (sole integrator) lands no `--staged` mechanism change.** The load-bearing
+   gate is **directory mode** at EA integration (#1) — that is what the EA runs, and it is
+   unaffected (every commit in this guard's history was dogfooded in directory mode).
