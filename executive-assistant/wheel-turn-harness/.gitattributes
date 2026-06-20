@@ -1,0 +1,3 @@
+# The harness runs on Windows (Git Bash) and Linux — keep shell scripts LF so they never
+# break with a CRLF `$'\r'` error after a Windows checkout.
+*.sh text eol=lf
