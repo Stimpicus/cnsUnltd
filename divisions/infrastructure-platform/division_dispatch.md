@@ -1,13 +1,13 @@
-# Infra → EA outbox (division_dispatch)
+# infrastructure-platform → EA outbox (division_dispatch)
 
 ```dispatch
 issuer: infrastructure-platform
 to: EA
 command: ack
 wo: -
-step: 4065a3ae
-timestamp: 2026-06-19T12:58:10Z
-nonce: 5c0a68f8
+step: 62c2bed0
+timestamp: 2026-06-20T21:11:02Z
+nonce: 32b57173
 ```
 
-state: halt obeyed; listener stops acting
+state: crunch acked re 62c2bed0 on claude-code-WO-first-real-turn-substrate-audit.md; state-of-substrate-infrastructure-platform section produced on branch
