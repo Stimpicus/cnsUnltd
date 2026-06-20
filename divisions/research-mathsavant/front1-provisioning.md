@@ -28,4 +28,5 @@ of** Infra's systematic session-isolation crunch (neither blocks the other).
 - **Worktree path:** `C:/GitRepos/cnsUnltd-mathsavant-grind`
 - **Branch the grind commits to:** `instrument/mathsavant-grind`
 - **Standing WO:** `claude-code-WO-mathsavant-standing.md` → Front 1, run under the approved sandbox.
-- **Gating prerequisite:** Security sandbox sign-off (Task 2 — `sandbox-spec.md`). **Not yet signed off.**
+- **Sandbox sign-off:** base spec **ratified by the founder** (D-023; `sandbox-spec.md`); option (b) durability keeps it unchanged (savant network-dark). An independent Security write-surface audit remains a separate open item.
+- **Durability:** **LIVE + demonstrated** (D-023) — host-side pusher `front1-pusher.sh` carried a test commit to `origin/instrument/mathsavant-grind` (`00936f8`). Loss bound restored: ≤ work since the last push; a clean halt loses ≈ nothing.

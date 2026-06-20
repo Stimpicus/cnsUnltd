@@ -1,14 +1,17 @@
 # mathSavantClaude Front 1 — Sandbox Spec (Task 2 · Security / Red-Team)
 
-**STATUS: PROPOSED — AWAITING SECURITY / RED-TEAM BINDING SIGN-OFF.**
+**STATUS: BASE SPEC RATIFIED BY THE FOUNDER — 2026-06-19** (per the
+durability-realignment order, which affirms this spec verbatim: *"Keep it"*).
+Security / Red-Team reports to the **FOUNDER**, so that written affirmation is the
+binding sign-off the gate awaited; the EA **records** it, and still never self-issues
+it. The base spec below stands as approved. **Option (b) durability leaves this spec
+UNCHANGED** (the savant stays network-dark; the host pushes) — so no amendment was
+needed.
 
-Security / Red-Team (Div 2) **defines and approves** the sandbox; it reports to the
-**FOUNDER**, not the CEO/EA. **The EA does not self-issue this clearance** — a binding
-security gate that is independent of the CEO is the constitution's deliberate
-asymmetry, and the Boromir clause says be *most* suspicious of a good reason to
-self-clear ("just to start Front 1"). The minimum spec below is transcribed from the
-founder's execution order **for Security to ratify, tighten, and sign off** — it is
-not pre-approved by the EA.
+> **Honest caveat:** this is the founder's ratification of a conservative spec — it is
+> NOT a substitute for the independent Security / Red-Team audit of the savant as a
+> new write-surface (and the bus-clearance / STEP 5). Those remain **separate, still-open
+> Security items** and are not conflated with this sandbox sign-off.
 
 > **Scope note:** this is the **sandbox sign-off only.** It is NOT the bus-clearance
 > (the STEP 5 / bus go-live gate is a separate Security task) — do not conflate.
@@ -21,10 +24,12 @@ not pre-approved by the EA.
 - **Network: default-deny** — open only what the verifier/toolchain genuinely needs;
   ideally none.
 
-## Sign-off — to be completed by Security / Red-Team (binding)
-- [ ] Security ratifies (or tightens) the spec above.
-- [ ] A recorded sign-off naming the **approved** spec, committed (gated) + ledgered.
-- A **withheld sign-off is a STOP, not a fork** — security is binding here. If the
-  spec is insufficient, the gap is fixed **before** launch.
+## Sign-off
+- [x] **Base spec ratified by the FOUNDER** (2026-06-19, durability-realignment order) — the authority Security reports to.
+- [x] Recorded + ledgered (**D-023**). Option (b) leaves the spec unchanged; no amendment.
+- [ ] **Separate, still-open Security items** (not done by this order, not conflated):
+  the independent audit of the savant as a new write-surface, and the bus-clearance
+  (STEP 5).
 
-**Until this sign-off is recorded, Front 1 is NOT handed to the founder for launch.**
+A withheld/insufficient sign-off is a STOP, not a fork — but the base spec is
+conservative (network-dark) and founder-affirmed, and option (b) relaxes nothing.
