@@ -1,0 +1,6 @@
+#!/bin/sh
+# cnsUnltd pre-commit hook (durable; wired via `git config core.hooksPath .githooks`).
+# Runs the committed secret-VALUE scanner on the staged diff. Identifier hygiene (LAN
+# IPs / MACs) remains the EA pre-integration DIRECTORY scan until the board-hygiene
+# `--staged` fix lands + Security signs off (branch fix/board-hygiene-staged).
+exec "$(git rev-parse --show-toplevel)/governance/board-hygiene/secret-scan.sh"

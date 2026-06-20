@@ -85,3 +85,22 @@ owns the gate logic. This guard is the tooling, offered for that ratification.
    and the EA (sole integrator) lands no `--staged` mechanism change.** The load-bearing
    gate is **directory mode** at EA integration (#1) — that is what the EA runs, and it is
    unaffected (every commit in this guard's history was dogfooded in directory mode).
+
+---
+
+## EA addendum — pre-commit hook + the ERE rule (D-030, 2026-06-20)
+Security found the `--staged` BRE bug (`finding-board-hygiene-staged-bre.md`): the mode
+deleted every added line and reported CLEAN unconditionally. EA disposition = **ACCEPT**.
+Resulting standing setup:
+1. **A working pre-commit hook is now wired** — `.githooks/pre-commit` →
+   `governance/board-hygiene/secret-scan.sh` (a correct **diff-mode ERE** secret-VALUE
+   guard), durable via `git config core.hooksPath .githooks` (see `.githooks/README.md`).
+   It covers secret *values*; it does **not** cover live-box *identifiers*.
+2. **Identifier hygiene stays the EA pre-integration DIRECTORY scan** — the binding board
+   gate — until the board-hygiene `--staged` fix (branch `fix/board-hygiene-staged`) is
+   **Security-signed-off** and landed.
+3. **Durable ERE rule (applies to every staged-content scan):** use **ERE** (`grep -E` /
+   `grep -vE`) or `gitleaks` — never bare BRE. Note the identical pitfall in the loose
+   `git grep --cached <pattern>` advice: **`git grep` defaults to BRE**, so `\+`/`\?`/`\|`
+   behave as operators, not literals. No shared doc may instruct a session to scan staged
+   content with a BRE command.
