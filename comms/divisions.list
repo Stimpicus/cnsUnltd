@@ -1,0 +1,18 @@
+# comms/divisions.list — the AUTHORITATIVE division roster for the comms bus.
+#
+# Deliberate eight-division allowlist. A division is recognised by the bus ONLY if it is
+# listed here (dispatch targets, spoke self-identity, `collect`). Adding a division is a
+# CONSCIOUS edit — it is never auto-absorbed just because a new divisions/<name>/ dir appears.
+# Auto-discovery is demoted to a hygiene SENTINEL (`bus.sh sentinel`) that FLAGS any
+# divisions/*/ dir absent from this list (a stray dir, or an R&D instrument such as the
+# former divisions/research-mathsavant/). The sentinel never grants membership.
+#
+# Format: one division name per line; `#` comments and blank lines are ignored.
+development
+security-redteam
+qa-release-eng
+docs-devrel
+design-product
+infrastructure-platform
+research-rnd
+ip-legal-strategy
