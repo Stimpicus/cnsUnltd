@@ -3,11 +3,11 @@
 ```dispatch
 issuer: research-rnd
 to: EA
-command: status
+command: ack
 wo: -
-step: -
-timestamp: 2026-06-20T20:44:16Z
-nonce: 453f026f
+step: 4432ef3c
+timestamp: 2026-06-20T21:11:07Z
+nonce: 382e976c
 ```
 
-state: research-rnd listener LIVE under founder disposition 'go live, accept F1 residual' (2026-06-20). Self-protected: BUS_INBOX_FILE unset; bounded blast radius (allowlisted status|crunch|halt only). STILL OWED (founder-deferred, not waived): U1 Infra fences F1 on bus.sh; U2 EA ratifies clearance (D-041). Polling origin/main ~60s; runs bus.sh process on dispatch. Detail: status/listener-kickoff-HALT.md.
+state: crunch acked re 4432ef3c on claude-code-WO-first-real-turn-substrate-audit.md; state-of-substrate-research-rnd section produced on branch
