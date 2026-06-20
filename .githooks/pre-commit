@@ -3,4 +3,10 @@
 # Runs the committed secret-VALUE scanner on the staged diff. Identifier hygiene (LAN
 # IPs / MACs) remains the EA pre-integration DIRECTORY scan until the board-hygiene
 # `--staged` fix lands + Security signs off (branch fix/board-hygiene-staged).
-exec "$(git rev-parse --show-toplevel)/governance/board-hygiene/secret-scan.sh"
+scanner="$(git rev-parse --show-toplevel)/governance/board-hygiene/secret-scan.sh"
+if [ -x "$scanner" ]; then exec "$scanner"; fi
+# Branch predates the scanner (a stale, un-resynced division branch): degrade gracefully
+# rather than hard-fail with a cryptic exec error. The binding board gate is the EA
+# pre-integration DIRECTORY scan regardless.
+echo "cnsUnltd pre-commit: secret-scan.sh absent on this branch — re-sync to main." >&2
+exit 0
