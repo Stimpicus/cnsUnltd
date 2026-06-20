@@ -104,3 +104,46 @@ Resulting standing setup:
    `git grep --cached <pattern>` advice: **`git grep` defaults to BRE**, so `\+`/`\?`/`\|`
    behave as operators, not literals. No shared doc may instruct a session to scan staged
    content with a BRE command.
+
+---
+
+## Security addendum — the gate-resolution rule (R4) (2026-06-20)
+*Authored by Security/Red-Team after the branch-dependence sweep
+(`divisions/security-redteam/deliverables/sweep-branch-dependence-gates.md`); awaiting EA
+integration. Generalizes the ERE rule above: ERE governs **how** a checker matches; R4 governs
+**where the checker comes from** and **what happens when it is absent.***
+
+**Why:** three fail-opens this session traced to one root cause — a gate that resolved its
+checker from a **mutable, branch-dependent** location. A version-controlled tool (or a relative
+`core.hooksPath`) is **absent on any branch that predates it**, so a stale-branch commit runs
+**no gate at all**; and some gates then **passed (failed open)** when the checker could not be
+located.
+
+**Durable rule R4 — two clauses, both mandatory for every gate:**
+1. **Resolve the checker from a FIXED, canonical source** — an `origin/main` ref's object store
+   (`git show origin/main:<path>` / `git cat-file`), a self-contained inline implementation, or
+   an absolute pinned path. **Never** from the checked-out working tree
+   (`$(git rev-parse --show-toplevel)/…`, any relative path), and **never** via a relative
+   `core.hooksPath` pointing at version-controlled content. The working tree may be on any
+   branch or dirty; the canonical ref is identical everywhere.
+2. **Fail CLOSED.** If the checker cannot be resolved (missing, empty, unreadable), the gate
+   **BLOCKS** — it never passes an unverifiable change. Any escape hatch must be a
+   per-invocation, loudly-audited env var (never a persistent config), scoped to the
+   unresolvable-checker case only.
+
+**Applied this session:**
+- **`.githooks/pre-commit`** — *was* relative `core.hooksPath .githooks` + a `show-toplevel`
+  tree path (absent on stale branches). Fix: install in `.git/hooks/` (`core.hooksPath` unset),
+  resolve the scanner from `origin/main`'s object store, fail-closed with the audited
+  `BOARD_HYGIENE_ALLOW_NO_SCANNER=1` override. *(Security-authored; pending EA install +
+  post-install re-confirm.)*
+- **`worktrees.sh run_gates`** — *was* `$MAIN` working-tree resolution + `return 0` on a scanner
+  miss (fail-open). Fix `fix/worktrees-gate-failclosed`: resolves from `origin/main`'s object
+  store and **fails closed**. **Security-verified** (self-test 10/0; stale-branch staged secret
+  → BLOCK; unresolvable checker → fail-closed).
+- **`front1-pusher.sh`** — tree-relative resolution + a BRE silent-pass; **removed** with
+  `research-mathsavant`. If ever revived, it must follow R4.
+
+**Compliant by construction (no change needed):** `comms/bus.sh` (reads from `origin/main`) and
+`wheel-turn.sh` (uses `show-toplevel` only for a scratch dir; enforcement is delegated to
+`run_gates`).
