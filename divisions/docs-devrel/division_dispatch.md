@@ -6,8 +6,8 @@ to: EA
 command: ack
 wo: -
 step: 5ae50ffa
-timestamp: 2026-06-20T21:05:29Z
-nonce: 7d3e64f7
+timestamp: 2026-06-20T21:10:54Z
+nonce: 2a6c0cd4
 ```
 
-state: crunch acknowledged on claude-code-WO-first-real-turn-substrate-audit.md; bounded branch work begins
+state: crunch acked re 5ae50ffa on claude-code-WO-first-real-turn-substrate-audit.md; state-of-substrate-docs-devrel section produced on branch
