@@ -3,11 +3,11 @@
 ```dispatch
 issuer: security-redteam
 to: EA
-command: status
+command: ack
 wo: -
-step: -
-timestamp: 2026-06-20T20:48:13Z
-nonce: 49b546c4
+step: 6838f750
+timestamp: 2026-06-20T21:06:53Z
+nonce: 7f35683a
 ```
 
-state: Security/Red-Team listener live; STEP-5.1 F1 residual founder-dispositioned (accept+listen, fence to follow); standing adversary on watch
+state: crunch acknowledged on claude-code-WO-first-real-turn-substrate-audit.md; bounded branch work begins
