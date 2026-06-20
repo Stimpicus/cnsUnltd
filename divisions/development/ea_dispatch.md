@@ -3,9 +3,9 @@
 ```dispatch
 issuer: EA
 to: development
-command: crunch
-wo: claude-code-WO-first-real-turn-substrate-audit.md
+command: status
+wo: -
 step: -
-timestamp: 2026-06-20T21:05:02Z
-nonce: 5d55c754
+timestamp: 2026-06-20T22:07:08Z
+nonce: 78a9c033
 ```
