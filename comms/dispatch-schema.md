@@ -74,16 +74,50 @@ A response carries `re: <inbound-nonce>` in its state line. Before acting, the
 listener compares the inbound nonce to the last one it answered (read from its own
 outbox); an already-answered nonce is a no-op. Replays cannot double-fire.
 
-## Where the files live
-- Inbox (EA→Infra): `divisions/infrastructure-platform/ea_dispatch.md` — **trusted
-  only when read from `main`.** The copy on the division branch is an inert
-  template.
-- Outbox (Infra→EA): `divisions/infrastructure-platform/division_dispatch.md` — on
-  the `division/infrastructure-platform` branch.
-- Tooling (`bus.sh`, this doc): proposed for promotion to a shared `comms/` on
-  `main` so all 8 divisions + the EA share one copy (same pattern as the
-  board-hygiene bundle).
+## Where the files live (any division `<name>`)
+- Inbox (EA→`<name>`): `divisions/<name>/ea_dispatch.md` — **trusted only when read
+  from `main`.** The copy on the division branch is an inert template.
+- Outbox (`<name>`→EA): `divisions/<name>/division_dispatch.md` — on the
+  `division/<name>` branch.
+- Tooling (`bus.sh`, this doc) lives in the shared `comms/` on `main`, so every
+  division + the EA run the same one copy.
+
+## Identity & the hub (the generalization)
+`bus.sh` is no longer bound to one division. It carries **every division that has a
+`divisions/<name>/` directory** — auto-discovered, not a hardcoded list, so it
+scales as divisions are added or removed (the org already grew past eight).
+
+- **A spoke** (a division session) resolves its own identity from **`$BUS_DIV`** if
+  set, else by inference from the current **`division/<name>`** branch; the result
+  is validated against `divisions/<name>/` existing, so a typo or a forged name can
+  never resolve. It runs `process` / `ready` / `validate` on ITS OWN inbox/outbox.
+- **The EA hub** runs `dispatch <division> <verb> [wo]` to write an EA→division
+  `ea_dispatch.md` (the verb is validated against the same allowlist — the hub
+  cannot emit a gated verb), and `collect` to read every division's last outbox
+  state. A written `ea_dispatch` is **authoritative only once the EA commits it to
+  `main`** — the write-auth chokepoint is unchanged, so generalizing the *targets*
+  does not widen the *trust boundary*.
+
+## DECISIONS — runtime-model knobs (founder/EA's to set; surfaced, not guessed)
+Each ships with a defensible default so the bus is usable now; none is a silent guess.
+
+- **D1 — Spoke identity resolution.** `$BUS_DIV` override **then** `division/<name>`
+  branch inference (default). Alt: an explicit `--div` on every call, or a registry
+  lookup. *Rec: env-then-branch* — zero-config for a division on its own branch,
+  explicit when off it (EA, CI, a feature branch).
+- **D2 — Canonical division list.** Auto-discovered from `divisions/*/` (default —
+  self-maintaining, no drift). Alt: a committed `comms/divisions.list`. *Rec:
+  auto-discover* unless a curated subset is ever needed.
+- **D3 — Hub authority.** `dispatch` is a general command; its authority comes solely
+  from the **main-integration chokepoint** (only the EA lands `ea_dispatch` on
+  `main`), not from the command itself. *Rec: keep it there* — one proven chokepoint;
+  do not add a second auth surface. (The EA session can be the only one that *runs*
+  `dispatch`, but that is convention, not the security boundary.)
+- **D4 — `collect` scope.** Reads each division's outbox from `origin/division/<name>`
+  (read-only liveness view). *Open:* should silence past a heartbeat window
+  auto-flag a dead listener, or is that the EA's cadence to judge? *Rec: EA judges
+  for now.*
 
 ## Existing gates still apply
-board-hygiene + secret-scan run at EA integration, so dispatch content cannot carry
-secrets or live-box identifiers onto the board.
+board-hygiene (which covers secrets too) runs at EA integration, so dispatch content
+cannot carry secrets or live-box identifiers onto the board.
