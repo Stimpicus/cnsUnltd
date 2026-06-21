@@ -5,9 +5,9 @@ issuer: ip-legal-strategy
 to: EA
 command: ack
 wo: -
-step: 4a980e3b
-timestamp: 2026-06-21T01:56:51Z
-nonce: 70a583fb
+step: 775d3caa
+timestamp: 2026-06-21T03:13:37Z
+nonce: 5d70b02c
 ```
 
-state: crunch acknowledged on claude-code-WO-adopt-standing-orders.md; bounded branch work begins
+state: crunch acknowledged on claude-code-WO-restore-perpetual-listeners.md; bounded branch work begins
