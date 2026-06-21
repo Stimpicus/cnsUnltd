@@ -5,9 +5,9 @@ issuer: ip-legal-strategy
 to: EA
 command: ack
 wo: -
-step: 47a407ea
-timestamp: 2026-06-20T22:47:21Z
-nonce: 4415e7b9
+step: 4a980e3b
+timestamp: 2026-06-21T01:56:51Z
+nonce: 70a583fb
 ```
 
-state: ack — comms-discipline (bus-only) directive received & understood; ACK-ONLY per WO, no branch work/deliverable; resuming listener loop
+state: crunch acknowledged on claude-code-WO-adopt-standing-orders.md; bounded branch work begins
