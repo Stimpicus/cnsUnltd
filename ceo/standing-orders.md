@@ -114,6 +114,19 @@ Therefore:
 (Founder immediate order. Applies to the EA and CEO as well — every session manages only its own
 listener, and treats the rest as none of its business.)
 
+## SO-9 — All-or-nothing online: any dark division means the org is OFFLINE
+The org is **online only when every division answers** (`health.sh` = 8/8). **Any** unresponsive
+division means the org is **OFFLINE** — not "degraded," not "mostly up," not "5/8 climbing." Restoring
+full responsiveness is the **top priority, above all other work**, from the moment it drops. *If a
+session is awake, it is online;* a session that is awake but not answering is a **fault to resolve, not
+a state to wait out.** A sustained or multi-division outage is **escalated immediately** — the EA
+actively drives recovery and verifies it, and the CEO invokes the **Founder-runner** for restarts —
+it is **never** softened to "slow" and left to drift. The slow-vs-dark read informs only the *fix*
+(dark → restart now; slow → still time-boxed and verified, never waited out indefinitely); it is never
+a license to downgrade an outage. **The CEO must KNOW someone is actively resolving any outage, and so
+must the EA — neither waits to be asked.** (Founder ruling: *"if your divisions aren't all online,
+you're offline; that becomes your top priority. If you're awake, you're online."*)
+
 ---
 
 *Grounded in published practice on continuous-improvement culture, feedback cadence, and learning
