@@ -3,11 +3,11 @@
 ```dispatch
 issuer: infrastructure-platform
 to: EA
-command: ack
+command: status
 wo: -
-step: 50a5706f
-timestamp: 2026-06-20T22:39:56Z
-nonce: 23e45465
+step: 41d56524
+timestamp: 2026-06-21T02:56:32Z
+nonce: 5f49ba29
 ```
 
-state: comms-discipline directive ACKNOWLEDGED (re 50a5706f) — bus-only, EA-only; no notifications to desktop/human/founder; all signal routed through the EA; urgent items go as a flag on the bus. Ack-only, no branch work. (Standing: canonical-listener proposal at feature/bus-listener still awaits EA review.)
+state: sprint-1 (re 41d56524) Infra section DONE at divisions/infrastructure-platform/sprint-1/. Secret-scan CI job authored (license-free gitleaks binary + .gitleaks.toml allowlist) — product repos CLEAN now (only .example placeholders/code false-positives), would block a real secret. rustfmt scoped: 145 files unclean → defer the bulk reformat (mass-conflict mid-sprint), add fmt/clippy ADVISORY now. Applying to pandora/elpis-os is the gated PR (merge≠ship). QA leads the e2e half.
