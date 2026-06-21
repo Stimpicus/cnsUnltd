@@ -1,0 +1,155 @@
+# PROPOSED product-CI job — Sprint-1 "green means green" (QA/Release-Eng, Div 3, lead)
+#
+# Authored on division/qa-release-eng as a DELIVERABLE. It is NOT committed to the
+# pandora product repo by this division — landing is GATED (EA integrates; merge ≠ ship).
+# Target home: pandora `.github/workflows/` — either drop in as its own workflow file
+# (`f2f-e2e.yml`) or fold the `f2f-e2e` job into the existing `.github/workflows/ci.yml`
+# (it is additive; it does not touch the existing build-only jobs).
+#
+# WHAT IT DOES (the WO's ask): runs the three Playwright e2e suites — two-session-call,
+# group-call, webrtc-cross-browser — against an EPHEMERAL SpacetimeDB `face-to-face`
+# module (spin up → publish → run → tear down). Exit-code-driven: the job is GREEN iff
+# `spacetime publish`, the dev-server readiness probe, and `playwright test` all exit 0.
+#
+# VERSION PIN — the module declares `spacetimedb = "2.2"` (applications/face-to-face/
+# module/Cargo.toml). The SpacetimeDB CLI MUST be compatible with that ABI or publish
+# fails. STDB_VERSION below is the single knob; verify it against the team's local
+# toolchain on first run (this is the most likely first-run breakage — surfaced, not hidden).
+#
+# AUTH/SECRETS: uses VITE_AUTH_PROVIDER=spacetime (SpacetimeDB-native, tokenless mint) so
+# NO Clerk key / OIDC secret is needed in CI. Requires the module in dev_mode (set below).
+# The throwaway HMAC secret is generated at runtime — no secret is committed in this file.
+
+name: f2f-e2e
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  workflow_call:        # so ci.yml can `uses:` this if preferred over a copied job
+
+env:
+  STDB_VERSION: "2.2.0"            # MUST match the module's spacetimedb crate (2.2). Adjust to the toolchain in use.
+  MODULE_DIR: applications/face-to-face/module
+  WEB_DIR: applications/face-to-face/web-client
+  MODULE_NAME: face-to-face
+
+jobs:
+  f2f-e2e:
+    name: f2f e2e (ephemeral SpacetimeDB + Playwright)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Rust + wasm target (module build)
+        run: rustup target add wasm32-unknown-unknown
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install SpacetimeDB CLI (pinned)
+        run: |
+          set -euo pipefail
+          curl -sSfL https://install.spacetimedb.com | sh -s -- --yes --version "${STDB_VERSION}"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Start an ephemeral SpacetimeDB instance
+        run: |
+          set -euo pipefail
+          spacetime --version
+          # Standalone instance on :3000; background it and wait until it answers.
+          nohup spacetime start > "${RUNNER_TEMP}/stdb.log" 2>&1 &
+          echo "STDB_PID=$!" >> "$GITHUB_ENV"
+          for i in $(seq 1 60); do
+            if curl -sf http://127.0.0.1:3000/v1/ping >/dev/null 2>&1; then echo "spacetimedb up"; exit 0; fi
+            sleep 1
+          done
+          echo "::error::SpacetimeDB did not become ready"; cat "${RUNNER_TEMP}/stdb.log"; exit 1
+
+      - name: Build + publish the face-to-face module (ephemeral)
+        run: |
+          set -euo pipefail
+          # `spacetime publish` builds the wasm from source and publishes to `local`.
+          spacetime publish "${MODULE_NAME}" --server local -p "${MODULE_DIR}" --yes
+
+      - name: Configure module for native-identity e2e (dev_mode)
+        run: |
+          set -euo pipefail
+          # The `spacetime` auth provider (tokenless mint) requires dev_mode=true
+          # (skips OIDC issuer/audience checks; the SpacetimeDB-minted JWT still
+          # satisfies the has_jwt() connect gate). set_config is owner-only; the
+          # publishing CLI identity IS the owner, so these calls are authorized.
+          spacetime call "${MODULE_NAME}" set_config dev_mode true
+          # Replace the init placeholder so HMAC-dependent paths are well-formed.
+          # Generated at runtime — never a committed secret.
+          spacetime call "${MODULE_NAME}" set_config hmac_secret_v1 "$(openssl rand -base64 32)"
+
+      - name: Web client deps + browsers
+        working-directory: ${{ env.WEB_DIR }}
+        run: |
+          set -euo pipefail
+          npm ci
+          # chromium + firefox cover the matrix on hosted Linux; Edge (msedge channel)
+          # is not present on hosted runners and the suite SKIPS it via launchOrSkip
+          # (not a failure). Add a self-hosted runner to exercise Edge for real.
+          npx playwright install --with-deps chromium firefox
+
+      - name: Configure the client for the SpacetimeDB substrate
+        working-directory: ${{ env.WEB_DIR }}
+        run: |
+          set -euo pipefail
+          cat > .env.local <<EOF
+          VITE_SUBSTRATE=spacetimedb
+          VITE_AUTH_PROVIDER=spacetime
+          VITE_SPACETIMEDB_MODULE=${MODULE_NAME}
+          EOF
+
+      - name: Start the dev server + wait for readiness
+        working-directory: ${{ env.WEB_DIR }}
+        run: |
+          set -euo pipefail
+          nohup npm run dev > "${RUNNER_TEMP}/vite.log" 2>&1 &
+          echo "VITE_PID=$!" >> "$GITHUB_ENV"
+          # basic-ssl serves a self-signed cert on :5173 → -k. Helpers default to
+          # https://localhost:5173 (override: F2F_APP_URL).
+          for i in $(seq 1 60); do
+            if curl -skf https://localhost:5173 >/dev/null 2>&1; then echo "vite up"; exit 0; fi
+            sleep 1
+          done
+          echo "::error::vite dev server did not become ready"; cat "${RUNNER_TEMP}/vite.log"; exit 1
+
+      - name: Run the e2e suites (exit-code-driven)
+        working-directory: ${{ env.WEB_DIR }}
+        run: |
+          set -euo pipefail
+          # Headless by default (helpers: HEADED!='1'); synthetic camera/mic is built
+          # into the helpers, so no media hardware is needed. Playwright's own
+          # retries:3 / workers:1 (playwright.config.ts) absorb WebRTC timing flake.
+          npx playwright test \
+            tests/two-session-call.spec.ts \
+            tests/group-call.spec.ts \
+            tests/webrtc-cross-browser.spec.ts
+
+      - name: Upload test artifacts (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: f2f-e2e-artifacts
+          path: |
+            ${{ env.WEB_DIR }}/test-results/
+            ${{ env.WEB_DIR }}/playwright-report/
+            ${{ runner.temp }}/vite.log
+            ${{ runner.temp }}/stdb.log
+          if-no-files-found: ignore
+
+      - name: Tear down (always)
+        if: always()
+        run: |
+          set +e
+          [ -n "${VITE_PID:-}" ] && kill "${VITE_PID}" 2>/dev/null
+          spacetime delete "${MODULE_NAME}" --server local --yes 2>/dev/null
+          [ -n "${STDB_PID:-}" ] && kill "${STDB_PID}" 2>/dev/null
+          true

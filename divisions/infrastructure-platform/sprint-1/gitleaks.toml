@@ -1,0 +1,22 @@
+# gitleaks config for pandora / elpis-os. Deploy as `.gitleaks.toml` at each repo root.
+# Built-in rules + an allowlist tuned to the intentional placeholders / false positives
+# found in a real scan (so the gate is signal, not noise).
+title = "pandora / elpis-os secret-scan"
+
+[extend]
+useDefault = true   # gitleaks' built-in detection rules (keys, tokens, high-entropy)
+
+[allowlist]
+description = "Intentional templates + non-secret code patterns — NOT real secrets"
+paths = [
+  '''.*\.example$''',                 # secrets.yaml.example template files
+  '''.*/secrets\.yaml\.example''',
+  '''.*/dist/.*''',                   # built/generated JS (source is the truth)
+]
+# Placeholder/code patterns that are not secrets. (Keep tight — allowlist false
+# positives, never a real secret shape.)
+regexes = [
+  '''REPLACE_WITH_[A-Z_]+''',         # placeholder token values in *.example
+  '''identityToken''',                # Swift property access, not a literal secret
+  '''\?\?\s*['"]pending['"]''',       # `?? 'pending'` default value
+]
