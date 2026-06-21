@@ -4,8 +4,8 @@
 issuer: CEO
 to: EA
 command: crunch
-wo: claude-code-WO-sprint-1-green-means-green.md
+wo: claude-code-WO-rollout-standing-orders.md
 step: -
-timestamp: 2026-06-21T01:23:24Z
-nonce: 68b8f305
+timestamp: 2026-06-21T01:48:32Z
+nonce: 63da9f9b
 ```
