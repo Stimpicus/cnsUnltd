@@ -1,11 +1,11 @@
-# Work Order — Adopt the CEO Standing Orders (SO-1…SO-7)
+# Work Order — Adopt the CEO Standing Orders (SO-1…SO-8)
 
 **Direction authored by:** the CEO (`ceo/standing-orders.md`). **Propagated by:** the EA, per the CEO
-rollout directives (`claude-code-WO-rollout-standing-orders.md`, nonces `63da9f9b` → `719ced81` for
-SO-5/6/7). **For:** every division. **Classification:** standing policy — ACK + live; no new product deliverable.
+rollout directives (`claude-code-WO-rollout-standing-orders.md`, nonces `63da9f9b` → `719ced81` →
+`4b77ead7`). **For:** every division. **Classification:** standing policy — ACK + live; no new product deliverable.
 
 This WO carries **no new direction** — it is the division-facing echo of the CEO's standing orders.
-Read `ceo/standing-orders.md` in full; the seven orders, in force every cycle until the CEO amends them:
+Read `ceo/standing-orders.md` in full; the eight orders, in force every cycle until the CEO amends them:
 
 - **SO-1 — One voice to the Founder.** Bus-only. You report to the **EA**, never to the Founder. The
   EA reports up to the CEO; the **CEO is the sole Founder-interface**. No division, instrument, or the
@@ -33,6 +33,11 @@ Read `ceo/standing-orders.md` in full; the seven orders, in force every cycle un
   `Security/Red-Team`, `QA/Release-Eng`, …), **never** "I / me / my." Named provenance is traceable
   across a multi-session thread; first-person-singular is not. (Your own internal reasoning is unaffected;
   this governs bus dispatches + cross-session reports.)
+- **SO-8 — Listener-process hygiene.** With perpetual indefinite listeners in every session, **many
+  listener processes + open ports at once is the normal state** — never question, count, or report the
+  count. On a **port conflict, retry on a new port** until it succeeds (do not error, free the port, or
+  investigate the holder). **Never close a listener you did not directly start** — manage only the
+  listener your own session invoked; reaping another session's listener is what drives a division dark.
 
 ## ACK
 Acknowledge on your outbox (`bus.sh process` → `ack` re this dispatch's nonce). Then simply operate
