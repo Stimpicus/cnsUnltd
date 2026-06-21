@@ -4,8 +4,8 @@
 issuer: EA
 to: security-redteam
 command: crunch
-wo: claude-code-WO-adopt-standing-orders.md
+wo: claude-code-WO-restore-perpetual-listeners.md
 step: -
-timestamp: 2026-06-21T01:56:00Z
-nonce: 77e21573
+timestamp: 2026-06-21T03:13:07Z
+nonce: 702aa288
 ```

@@ -4,8 +4,8 @@
 issuer: EA
 to: docs-devrel
 command: crunch
-wo: claude-code-WO-adopt-standing-orders.md
+wo: claude-code-WO-restore-perpetual-listeners.md
 step: -
-timestamp: 2026-06-21T01:56:00Z
-nonce: 74a0b550
+timestamp: 2026-06-21T03:13:07Z
+nonce: 6684bfae
 ```
