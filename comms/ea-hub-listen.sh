@@ -31,20 +31,25 @@ roster() { grep -vE '^[[:space:]]*#|^[[:space:]]*$' "$ROSTER" 2>/dev/null | tr -
 field()  { awk -v k="^$1:" '/^```dispatch/{f=1;next} /^```/{f=0} f&&$0~k{print $2;exit}'; }
 seen_of(){ awk -F'\t' -v d="$1" '$1==d{print $2; exit}' "$SEEN" 2>/dev/null; }
 out_nonce(){ git -C "$MAIN" show "origin/division/$1:divisions/$1/division_dispatch.md" 2>/dev/null | field nonce; }
+ceo_inbox_nonce(){ git -C "$MAIN" show "origin/main:executive-assistant/ceo_dispatch.md" 2>/dev/null | field nonce; }
 
 # `mark`: record the current outbox nonce of every rostered division as SEEN (call after
 # processing, or to seed the baseline to the already-handled state).
 if [ "${1:-}" = "mark" ]; then
-  git -C "$MAIN" fetch -q origin $(roster | sed 's#^#division/#') 2>/dev/null || true
+  git -C "$MAIN" fetch -q origin main $(roster | sed 's#^#division/#') 2>/dev/null || true
   : > "$SEEN.tmp"
+  printf '%s\t%s\n' "CEO" "$(ceo_inbox_nonce)" >> "$SEEN.tmp"           # the hub's own inbox from the CEO
   while IFS= read -r d; do [ -n "$d" ] || continue; printf '%s\t%s\n' "$d" "$(out_nonce "$d")" >> "$SEEN.tmp"; done < <(roster)
-  mv "$SEEN.tmp" "$SEEN"; echo "[ea-hub-listen] marked $(wc -l < "$SEEN") outboxes as seen"; exit 0
+  mv "$SEEN.tmp" "$SEEN"; echo "[ea-hub-listen] marked CEO inbox + $(($(wc -l < "$SEEN")-1)) division outboxes as seen"; exit 0
 fi
 
 MAX="${1:-8}"; POLL="${LISTEN_POLL_SECS:-60}"; i=0
 while :; do
   git -C "$MAIN" fetch -q origin main $(roster | sed 's#^#division/#') 2>/dev/null || true
   events=""
+  # the hub's OWN inbox from the CEO (origin/main) — highest priority
+  cn="$(ceo_inbox_nonce)"
+  if [ -n "$cn" ] && [ "$cn" != "$(seen_of CEO)" ]; then events="$events CEO/directive/${cn}/CEO-DIRECTIVE"; fi
   while IFS= read -r d; do
     [ -n "$d" ] || continue
     n="$(out_nonce "$d")"; [ -n "$n" ] || continue

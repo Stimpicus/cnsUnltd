@@ -97,6 +97,19 @@ scales as divisions are added or removed (the org already grew past eight).
   state. A written `ea_dispatch` is **authoritative only once the EA commits it to
   `main`** — the write-auth chokepoint is unchanged, so generalizing the *targets*
   does not widen the *trust boundary*.
+- **The CEO tier (one level above the EA).** The CEO (CEO Claude) dispatches to the EA
+  the same way the EA dispatches to a division — over `main`, same schema, same
+  forbidden-verb guard. Inbox (CEO→EA): `executive-assistant/ceo_dispatch.md` (issuer
+  `CEO`, to `EA`); the EA reads it from `origin/main`, its hub listener
+  (`comms/ea-hub-listen.sh`) wakes on the new nonce, and `bus.sh ea-process` validates +
+  records receipt. Outbox (EA→CEO): `executive-assistant/ea_dispatch.md` (issuer `EA`, to
+  `CEO`), EA-written + signed on `main`. CEO Claude writes a directive with
+  `bus.sh ceo-dispatch <verb> [wo]`, then commits it to `main`. This puts CEO direction in
+  **git history** (auditable, nonce-tracked) instead of an out-of-band chat — founder
+  ruling (option A), ledger D-050. **F2 note:** when CEO Claude comes online it should add
+  its public signing key to `governance/security/allowed_signers`, so CEO commits to `main`
+  are tamper-evident alongside the EA's — `main` becomes a two-authorized-signer channel,
+  not honor-system.
 
 ## DECISIONS — runtime-model knobs (founder/EA's to set; surfaced, not guessed)
 Each ships with a defensible default so the bus is usable now; none is a silent guess.

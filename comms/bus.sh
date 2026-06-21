@@ -64,9 +64,13 @@ validate_block() {
   if [[ ! "${v[step]}" =~ $re ]]; then echo "INVALID: bad step"; return 1; fi
   re="^(${FORBIDDEN})$"
   if [[ "${v[command]}" =~ $re ]]; then echo "ATTACK: forbidden verb '${v[command]}'"; return 2; fi
-  if [ "$dir" = inbound ]; then
-    [ "${v[issuer]}" = "EA" ]      || { echo "INVALID: inbound issuer must be EA"; return 1; }
-    [ "${v[to]}" = "$selfdiv" ]    || { echo "INVALID: 'to' must be $selfdiv"; return 1; }
+  if [ "$dir" = inbound ] || [ "$dir" = ceo-inbound ]; then
+    # inbound = EA->division; ceo-inbound = CEO->EA (the hub's own inbox tier). Same verb
+    # allowlist + crunch-needs-wo rule; only the issuer/to identities differ.
+    local exp_issuer="EA" exp_to="$selfdiv"
+    [ "$dir" = ceo-inbound ] && { exp_issuer="CEO"; exp_to="EA"; }
+    [ "${v[issuer]}" = "$exp_issuer" ] || { echo "INVALID: inbound issuer must be $exp_issuer"; return 1; }
+    [ "${v[to]}" = "$exp_to" ]         || { echo "INVALID: 'to' must be $exp_to"; return 1; }
     re='^(status|crunch|halt)$'
     if [[ ! "${v[command]}" =~ $re ]]; then echo "INVALID: '${v[command]}' not on allowlist"; return 1; fi
     if [ "${v[command]}" = crunch ]; then
@@ -75,6 +79,12 @@ validate_block() {
     else
       [ "${v[wo]}" = "-" ] || { echo "INVALID: wo must be '-' for ${v[command]}"; return 1; }
     fi
+  elif [ "$dir" = ea-outbound ]; then
+    # EA->CEO (the EA answering the CEO over the hub tier).
+    [ "${v[issuer]}" = "EA" ]  || { echo "INVALID: EA->CEO issuer must be EA"; return 1; }
+    [ "${v[to]}" = "CEO" ]      || { echo "INVALID: EA->CEO 'to' must be CEO"; return 1; }
+    re='^(status|ack|flag)$'
+    if [[ ! "${v[command]}" =~ $re ]]; then echo "INVALID: EA->CEO command not allowed"; return 1; fi
   else
     [ "${v[issuer]}" = "$selfdiv" ] || { echo "INVALID: outbound issuer must be $selfdiv"; return 1; }
     [ "${v[to]}" = "EA" ]           || { echo "INVALID: outbound 'to' must be EA"; return 1; }
@@ -202,6 +212,65 @@ EOF
   return "$rc"
 }
 
+# ── EA↔CEO tier (the hub's OWN inbox, one level above the divisions) ──────────────
+# Symmetry with the division tier: EA→division rides main (the EA's authoritative channel);
+# so does CEO→EA (the CEO's directives to the EA). The EA reads its inbox from origin/main
+# and answers on its outbox, also main (EA-written, signed). For git history + auditability
+# of CEO direction (founder ruling, option A). Same schema, same forbidden-verb guard.
+EA_INBOX_PATH="executive-assistant/ceo_dispatch.md"     # CEO-authored; EA reads from origin/main
+EA_OUTBOX_PATH="executive-assistant/ea_dispatch.md"     # EA-authored; CEO reads from origin/main
+
+ea_write_outbox() { # $1=command $2=answered-nonce $3=state-text
+  local cmd="$1" answ="$2" state="$3" ts nonce
+  ts="$(date -u +%Y-%m-%dT%H:%M:%SZ)"; nonce="$(gen_nonce)"
+  {
+    echo "# EA → CEO outbox (ea_dispatch). Authoritative on main (EA-written, signed)."; echo
+    echo '```dispatch'
+    echo "issuer: EA"; echo "to: CEO"; echo "command: $cmd"; echo "wo: -"
+    echo "step: $answ"; echo "timestamp: $ts"; echo "nonce: $nonce"
+    echo '```'; echo
+    echo "state: $state"
+  } > "$EA_OUTBOX_PATH"
+}
+ea_last_answered() { [ -f "$EA_OUTBOX_PATH" ] || { echo "-"; return; }; extract_block < "$EA_OUTBOX_PATH" | sed -n 's/^step: //p' | head -1; }
+
+cmd_ceo_dispatch() { # <verb> [wo]  — CEO Claude writes a directive to the EA (then commits to main, signed)
+  local verb="${1:-}" wo="${2:--}"
+  case "$verb" in
+    status|halt) wo="-";;
+    crunch) { [ "$wo" != "-" ] && [[ "$wo" =~ ^[A-Za-z0-9._-]+$ ]]; } || { surface "crunch requires a wo id: ceo-dispatch crunch <wo>"; return 2; };;
+    ''|*) surface "verb '${verb:-}' not on allowlist (status|crunch|halt) — the bus carries no gated verb"; return 2;;
+  esac
+  local ts nonce; ts="$(date -u +%Y-%m-%dT%H:%M:%SZ)"; nonce="$(gen_nonce)"
+  {
+    echo "# CEO → EA inbox (ceo_dispatch). Authoritative on main; the EA reads it from origin/main."; echo
+    echo '```dispatch'
+    echo "issuer: CEO"; echo "to: EA"; echo "command: $verb"; echo "wo: $wo"
+    echo "step: -"; echo "timestamp: $ts"; echo "nonce: $nonce"
+    echo '```'
+  } > "$EA_INBOX_PATH"
+  echo "wrote $EA_INBOX_PATH  (CEO -> EA: $verb wo=$wo nonce=$nonce)"
+  surface "commit this to main (signed) to make it authoritative"
+}
+
+cmd_ea_process() { # EA reads its CEO inbox from origin/main, validates, records receipt. $1=--dry-run
+  local dry="${1:-}" inbox res rc command wo step nonce issuer blocks
+  git fetch -q origin main 2>/dev/null || { surface "fetch failed"; return 1; }
+  inbox="$(git show "origin/main:$EA_INBOX_PATH" 2>/dev/null || true)"
+  [ -n "$inbox" ] || { echo "idle: no CEO inbox on main yet"; return 0; }
+  blocks="$(printf '%s\n' "$inbox" | count_blocks)"
+  [ "$blocks" = "1" ] || { echo "idle: CEO inbox has $blocks dispatch blocks (template/empty)"; return 0; }
+  res="$(printf '%s\n' "$inbox" | extract_block | validate_block ceo-inbound EA)"; rc=$?
+  if [ "$rc" -ne 0 ]; then surface "$res"; return "$rc"; fi
+  read -r _ command wo step nonce issuer <<<"$res"
+  if [ "$(ea_last_answered)" = "$nonce" ]; then echo "idle: CEO nonce $nonce already answered"; return 0; fi
+  echo "CEO-DIRECTIVE command=$command wo=${wo} nonce=$nonce — EA agent acts on it, then acks"
+  ea_write_outbox ack "$nonce" "CEO directive received: $command${wo:+ wo=$wo}; EA acting"
+  if [ "$dry" != "--dry-run" ]; then
+    git add "$EA_OUTBOX_PATH" && git commit -q -m "bus(EA->CEO): ack re $nonce" && git push -q origin HEAD:main && surface "pushed EA ack to main"
+  fi
+}
+
 self_test() {
   local pass=0 fail=0 TEST_DIV="infrastructure-platform"
   check() { local exp_rc="$1" exp_pre="$2" dir="$3"; shift 3
@@ -228,6 +297,14 @@ self_test() {
   if on_roster research-mathsavant; then fail=$((fail+1)); echo "  FAIL: roster wrongly includes research-mathsavant (an instrument, not a division)"; else pass=$((pass+1)); echo "  ok  : roster excludes research-mathsavant (instrument, not a division)"; fi
   if [ "$(roster | grep -c .)" -eq 8 ]; then pass=$((pass+1)); echo "  ok  : roster = exactly 8 divisions"; else fail=$((fail+1)); echo "  FAIL: roster = $(roster | grep -c .) entries, expected 8"; fi
   if cmd_sentinel >/dev/null 2>&1; then pass=$((pass+1)); echo "  ok  : sentinel clean (divisions/*/ ⟷ divisions.list agree)"; else fail=$((fail+1)); echo "  FAIL: sentinel reports drift — $(cmd_sentinel 2>&1 | head -1)"; fi
+  # ── CEO↔EA tier (the hub's own inbox/outbox) ──
+  check 0 "OK status" ceo-inbound "issuer: CEO" "to: EA" "command: status" "wo: -" "step: -" "timestamp: $TS" "nonce: $N"
+  check 0 "OK crunch" ceo-inbound "issuer: CEO" "to: EA" "command: crunch" "wo: claude-code-WO-x.md" "step: -" "timestamp: $TS" "nonce: $N"
+  check 2 "ATTACK"    ceo-inbound "issuer: CEO" "to: EA" "command: deploy" "wo: -" "step: -" "timestamp: $TS" "nonce: $N"
+  check 1 "INVALID"   ceo-inbound "issuer: EA"  "to: EA" "command: status" "wo: -" "step: -" "timestamp: $TS" "nonce: $N"
+  check 1 "INVALID"   ceo-inbound "issuer: CEO" "to: development" "command: status" "wo: -" "step: -" "timestamp: $TS" "nonce: $N"
+  check 0 "OK ack"    ea-outbound "issuer: EA"  "to: CEO" "command: ack" "wo: -" "step: $N" "timestamp: $TS" "nonce: $N"
+  check 1 "INVALID"   ea-outbound "issuer: CEO" "to: CEO" "command: ack" "wo: -" "step: -" "timestamp: $TS" "nonce: $N"
   echo "self-test: $pass passed, $fail failed"; [ "$fail" -eq 0 ]
 }
 
@@ -239,6 +316,8 @@ case "${1:-}" in
   dispatch)    shift; cmd_dispatch "$@" ;;
   collect)     cmd_collect ;;
   sentinel)    cmd_sentinel ;;
+  ceo-dispatch) shift; cmd_ceo_dispatch "$@" ;;
+  ea-process)  cmd_ea_process "${2:-}" ;;
   *) cat >&2 <<'USAGE'
 usage: bus.sh <command>
   spoke (a division — identity from $BUS_DIV or the division/<name> branch):
@@ -249,6 +328,9 @@ usage: bus.sh <command>
     dispatch <division> <verb> [wo]  write an EA->division dispatch (verb: status|crunch|halt)
     collect                          show every rostered division's last outbox state
     sentinel                         hygiene: flag any divisions/*/ dir absent from divisions.list
+    ea-process [--dry-run]           read the CEO->EA inbox from main, validate, ack
+  CEO (CEO Claude, one level above the EA):
+    ceo-dispatch <verb> [wo]         write a CEO->EA directive (then commit to main, signed)
   --self-test
 USAGE
      exit 2 ;;
