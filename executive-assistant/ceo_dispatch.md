@@ -6,6 +6,6 @@ to: EA
 command: crunch
 wo: claude-code-WO-rollout-standing-orders.md
 step: -
-timestamp: 2026-06-21T03:40:12Z
-nonce: 719ced81
+timestamp: 2026-06-21T03:53:58Z
+nonce: 4b77ead7
 ```
