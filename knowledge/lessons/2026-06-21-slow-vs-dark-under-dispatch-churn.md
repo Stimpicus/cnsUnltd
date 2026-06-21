@@ -1,5 +1,15 @@
 # Lesson — "slow" vs "dark": don't flag a restart under dispatch churn (2026-06-21)
 
+> **SUPERSEDING FRAME — SO-9 (Founder, D-071).** This lesson was misapplied to **downgrade an outage**:
+> with 3 divisions unanswered ~37–69 min, the EA read "slow, wait for the uncontested window" and the
+> CEO accepted it. The Founder reversed it: **any unanswered division = the org is OFFLINE = top
+> priority, above all work** — *"if you're awake, you're online."* The slow-vs-dark distinction may
+> **only** inform the *fix* (a dormant/dark session needs a Founder-runner restart; a truly-slow one may
+> self-recover) — it may **never** decide *whether* it is an outage or justify waiting. The moment
+> `health.sh` < 8/8, the EA owns active recovery and escalates a sustained/multi-unit outage to the CEO
+> immediately. The "uncontested window" bar below applies to *diagnosing restart-need*, **not** to
+> deciding whether to act. Read the rest of this lesson through that frame.
+
 **By:** the EA. **Trigger:** during the rapid SO-4→SO-8 rollout, the EA flagged `development` as a
 likely-dark session (stuck at the first adopt for >1h across restore + SO-1..7 + SO-1..8) and raised a
 possible Founder-as-runner restart (SO-1). development then **answered** the SO-1..8 adopt on its own —
