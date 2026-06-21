@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
 # comms/listen.sh — canonical division bus listener (the cheap shell wait).
-# ONE copy, every division. ALWAYS-ON: a perpetual background loop that EXITS
-# (re-invoking the agent) ONLY when a NEW dispatch appears — never on a heartbeat.
-# WHY no heartbeat: in this harness EVERY background-command exit re-invokes the agent
-# and surfaces a turn the Founder sees (a ping). A heartbeat exit would therefore ping
-# the Founder on every cycle — that is the regression that made sessions choose between
-# pinging the Founder and going dark. The loop ends ONLY on a real dispatch (a turn
-# worth surfacing); liveness is the EA's job (comms/health.sh), not a self-heartbeat.
-# READ-ONLY. On a dispatch the agent re-engages (resolve canonical bus from origin/main
-# -> process behind the gate -> push the outbox -> relaunch this). See comms/LISTENER.md.
+# ONE copy, every division. 5-MINUTE SILENT-HEARTBEAT standard (Founder order, D-077):
+#   * exits (re-invoking the agent) on a NEW dispatch — the agent processes + reports; OR
+#   * exits on a 5-MINUTE HEARTBEAT (--max 5 @ 60s) — the agent RELAUNCHES SILENTLY and says
+#     NOTHING (no Founder-facing output, no prose, no narration). Only a real dispatch ever
+#     produces a visible turn / a report.
+# WHY 5-min heartbeat: a background command that runs PAST the ~10-min ceiling does not reliably
+# deliver its completion wake (an indefinite listener silently missed a directive — D-076). A
+# 5-min heartbeat exits well UNDER the ceiling, so the re-invoke is dependable. WHY silent: the
+# Founder is pinged by agent CHATTER, not by the mechanism — so the heartbeat re-invoke must
+# produce zero Founder-facing output (silent relaunch). Reliable AND quiet.
+# READ-ONLY. On a dispatch the agent re-engages (resolve canonical bus from origin/main ->
+# process behind the gate -> push the outbox -> relaunch this). See comms/LISTENER.md.
 set -uo pipefail
 
 # Anchor to the main clone (git's own path format) so EVERY read is branch- and
@@ -23,10 +26,10 @@ DIV="${BUS_DIV:-$(infer_div)}"
 INBOX="divisions/$DIV/ea_dispatch.md"
 OUTBOX="divisions/$DIV/division_dispatch.md"
 
-# --max: 0 (default) = INDEFINITE — exit ONLY on a dispatch (the always-on, no-ping
-# standard). A POSITIVE --max heartbeats after N polls and is for DEBUG ONLY: it
-# re-invokes the agent (and pings the Founder) every N polls. Do not use it in prod.
-MAX="${1:-0}"
+# --max: heartbeat after N polls. DEFAULT 5 (= 5 min @ 60s) — the silent-heartbeat standard, sized
+# UNDER the ~10-min ceiling for a dependable re-invoke. On a HEARTBEAT exit the agent relaunches
+# SILENTLY (zero Founder-facing output). Tune only with LISTEN_POLL_SECS if the poll cadence differs.
+MAX="${1:-5}"
 POLL="${LISTEN_POLL_SECS:-60}"
 field(){ awk -v k="^$1:" '/^```dispatch/{f=1;next} /^```/{f=0} f&&$0~k{print $2;exit}'; }
 
@@ -41,6 +44,8 @@ while :; do
     echo "DISPATCH div=$DIV nonce=$inbox_nonce answered=${answered:-none}"; exit 0
   fi
   i=$((i+1))
-  if [ "$MAX" -gt 0 ] && [ "$i" -ge "$MAX" ]; then echo "HEARTBEAT div=$DIV polls=$i (debug cap)"; exit 0; fi
+  # 5-min HEARTBEAT: exit so the re-invoke stays under the ceiling. The agent must relaunch
+  # SILENTLY on this — no Founder-facing output.
+  if [ "$MAX" -gt 0 ] && [ "$i" -ge "$MAX" ]; then echo "HEARTBEAT div=$DIV polls=$i (SILENT relaunch — no Founder output)"; exit 0; fi
   sleep "$POLL"
 done

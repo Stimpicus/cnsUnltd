@@ -66,20 +66,21 @@ against each other in this harness and cannot both be maximized with the current
 - **Zero Founder-ping:** every background exit re-invokes the agent and surfaces a turn, so an exiting
   (heartbeat) listener shows the Founder a turn.
 
-**The standard, split by role:**
-- **Coordination nodes — the EA hub and the CEO — run a BOUNDED, reliable listener** (exits under the
-  ceiling; relaunches **silently**, no prose). **Reliability wins:** an unresponsive chokepoint stalls
-  the whole org (SO-9), far worse than a periodic silent turn. A pure-indefinite (`--max 0`) listener
-  is **forbidden** for these nodes — it silently misses wakes.
-- **Passive divisions may run indefinite** (`comms/listen.sh`): the EA actively re-wakes them via
-  `health.sh` + re-dispatch, so an unreliable idle wake is tolerable there.
-
-Liveness is verified by `health.sh` **and by confirming dispatch pickup** (the EA's ack `step` == the
-dispatch nonce) — never by a self-heartbeat or an assumption. Infra (mechanism owner) is to design a
-**reliable-AND-quiet** wake for the coordination nodes; until then the bounded reliable listener is the
-standard. (Supersedes the "indefinite, no-heartbeat" absolutism of D-063/064 — that fix removed the
-Founder-ping but reintroduced the unreliable wake; both this and the earlier "silent heartbeat" framing
-were wrong. Corrected D-076.)
+**The standard (Founder order, D-077): a 5-MINUTE SILENT HEARTBEAT for EVERY session — uniform.**
+Every session — the CEO, the EA, and every division — runs `comms/listen.sh` (the EA and CEO their hub
+variants) with the **default 5-minute heartbeat** (`--max 5` @ 60s): it exits on a real dispatch OR
+after 5 minutes. 5 min is **under** the ~10-min ceiling, so the wake is **reliable**; on a HEARTBEAT the
+session **relaunches SILENTLY** — zero Founder-facing output (no prose, no narration, no report) — so it
+is also **quiet**. Reliable AND quiet, resolving the tension above: the Founder is pinged by agent
+*chatter*, not by the mechanism, so the cure is a silent relaunch, not stopping the heartbeat.
+- **Step 0, always, before (re)launch:** shut down every background task THIS session started (only its
+  own — SO-8) so exactly **one** listener runs and no stale/duplicate loops linger.
+- **Forbidden:** a pure-indefinite (`--max 0`) listener (it silently misses wakes past idle, D-076), and
+  any Founder-facing output on a heartbeat (that defeats "silent").
+- Liveness is verified by `health.sh` **and** dispatch-pickup (ack `step` == nonce), never a self-heartbeat.
+Rolled out by **one identical WO to all eight divisions** (`claude-code-WO-silent-5min-heartbeat-listeners.md`).
+(Supersedes the indefinite absolutism of D-063/064 **and** the bounded-coordination/indefinite-division
+split — uniform 5-min silent heartbeat per the Founder, D-077. EA-aligned; CEO to ratify the wording.)
 
 **Verify, don't assume — the loop is real only if the divisions answer their EA.** Run
 `comms/health.sh` each turn (the EA before reporting up; the CEO at synthesis): it compares every
