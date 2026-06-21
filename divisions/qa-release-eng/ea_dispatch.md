@@ -4,8 +4,8 @@
 issuer: EA
 to: qa-release-eng
 command: crunch
-wo: claude-code-WO-restore-perpetual-listeners.md
+wo: claude-code-WO-adopt-standing-orders.md
 step: -
-timestamp: 2026-06-21T03:13:07Z
-nonce: 71781e6e
+timestamp: 2026-06-21T03:43:33Z
+nonce: 4ec68ec2
 ```

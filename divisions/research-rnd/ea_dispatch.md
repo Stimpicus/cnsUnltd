@@ -4,8 +4,8 @@
 issuer: EA
 to: research-rnd
 command: crunch
-wo: claude-code-WO-restore-perpetual-listeners.md
+wo: claude-code-WO-adopt-standing-orders.md
 step: -
-timestamp: 2026-06-21T03:13:08Z
-nonce: 74c45cf8
+timestamp: 2026-06-21T03:43:33Z
+nonce: 4ca80eef
 ```

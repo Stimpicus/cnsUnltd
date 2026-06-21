@@ -4,8 +4,8 @@
 issuer: EA
 to: ip-legal-strategy
 command: crunch
-wo: claude-code-WO-restore-perpetual-listeners.md
+wo: claude-code-WO-adopt-standing-orders.md
 step: -
-timestamp: 2026-06-21T03:13:08Z
-nonce: 775d3caa
+timestamp: 2026-06-21T03:43:34Z
+nonce: 79d7d3e3
 ```
