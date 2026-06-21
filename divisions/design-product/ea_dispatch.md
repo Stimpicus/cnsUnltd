@@ -4,8 +4,8 @@
 issuer: EA
 to: design-product
 command: crunch
-wo: claude-code-WO-silent-5min-heartbeat-listeners.md
+wo: claude-code-WO-cron-dispatch-monitor.md
 step: -
-timestamp: 2026-06-21T05:53:41Z
-nonce: 5f6ec08e
+timestamp: 2026-06-21T07:34:14Z
+nonce: 6986587b
 ```

@@ -4,8 +4,8 @@
 issuer: EA
 to: security-redteam
 command: crunch
-wo: claude-code-WO-silent-5min-heartbeat-listeners.md
+wo: claude-code-WO-cron-dispatch-monitor.md
 step: -
-timestamp: 2026-06-21T05:53:41Z
-nonce: 42d6eeeb
+timestamp: 2026-06-21T07:34:14Z
+nonce: 5cd0649d
 ```
