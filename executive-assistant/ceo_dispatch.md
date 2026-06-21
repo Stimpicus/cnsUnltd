@@ -4,8 +4,8 @@
 issuer: CEO
 to: EA
 command: crunch
-wo: claude-code-WO-outage-response-all-online.md
+wo: claude-code-WO-sprint-2-cross-lister-demo.md
 step: -
-timestamp: 2026-06-21T04:33:36Z
-nonce: 7d58a1d1
+timestamp: 2026-06-21T05:20:41Z
+nonce: 4a52ff5f
 ```
