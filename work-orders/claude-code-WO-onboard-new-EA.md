@@ -76,18 +76,17 @@ that is a finding — surface it; do not fake it.)*
 The hub listener is your nervous system. Run it via your background primitive; relaunch on exit.
 
 ```sh
-bash comms/ea-hub-listen.sh 8      # watches the CEO inbox + the 8 division outboxes; ~8-min heartbeat
+bash comms/ea-hub-listen.sh        # INDEFINITE (no --max): watches the CEO inbox + 8 division outboxes; exits ONLY on a real event
 ```
 - On **HUB-EVENT `CEO/…`** → a CEO directive: `bash comms/bus.sh ea-process` (validate + ack the
   CEO), then **do the work** (Step 4 / break the CEO's WO into division dispatches).
 - On **HUB-EVENT `<division>/…`** → that division answered: `collect`, then integrate behind the gate.
-- On **HUB-HEARTBEAT** → **silently relaunch** (heartbeats are noise; do not narrate them).
-- **Run the listener PERPETUALLY** — relaunch on every exit (event *and* heartbeat); never let it go
-  dormant. There is no budget; a listener costs almost nothing; *if you're awake, you're listening.*
-  What is suppressed is the **alert**, not the listener: a heartbeat relaunches **silently** (no
-  Founder ping; do not narrate it). (Corrected per **D-059** — the earlier "do not run an idle loop /
-  re-engage on demand" wording conflated *don't ping the Founder* with *don't listen* and caused a
-  6/8-dark regression.)
+- **Run the listener PERPETUALLY and INDEFINITELY** — no `--max` (default 0): it exits ONLY on a real
+  event (a CEO directive or a division reply), **never on a heartbeat**. In this harness a heartbeat
+  exit re-invokes you and surfaces a Founder-visible turn — there is no "silent heartbeat," so the loop
+  simply must not heartbeat. Relaunch on every dispatch exit; never go dormant; verify liveness with
+  `comms/health.sh`, not a self-heartbeat. (Corrected per **D-059 / D-062** — first "do not run an idle
+  loop," then "silent heartbeat," were both wrong; the fix is mechanical: indefinite, no heartbeat.)
 - Idempotency: `bash comms/ea-hub-listen.sh mark` records the current state as seen — **but do Step 4
   FIRST**, because there is already an unprocessed CEO directive waiting and you must not mark it
   seen without acting on it.

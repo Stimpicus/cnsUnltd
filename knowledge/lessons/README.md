@@ -12,3 +12,4 @@ What to retire / Surfaced upward**.
 ## Entries
 - [2026-06-20 — EA onboarding + Standing-Orders rollout](2026-06-20-ea-onboarding-and-standing-orders-rollout.md)
 - [2026-06-20 — the dark-listener regression + the always-on correction](2026-06-20-perpetual-listener-regression.md)
+- [2026-06-21 — a heartbeat IS a Founder ping (the mechanism; indefinite listeners)](2026-06-21-listener-heartbeat-pings-the-founder.md) *(Infra)*

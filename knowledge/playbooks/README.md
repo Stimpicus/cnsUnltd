@@ -9,7 +9,7 @@ via the EA, behind the gate. The EA flags drift between a playbook and what a di
 | Task | Canonical artifact | Notes |
 |---|---|---|
 | Inter-division comms | `comms/bus.sh` + `comms/dispatch-schema.md` | one bus; strict 7-key schema; a field can never be a command; inbox trusted only from `main`. |
-| Listening for bus events | `comms/listen.sh` (division) · `comms/ea-hub-listen.sh` (EA) · `comms/ceo-listen.sh` (CEO) | run PERPETUALLY — relaunch on every exit (event *and* heartbeat), never dormant (D-059); read-only, branch-independent, idempotent-by-nonce, heartbeat `--max 8` under the ~10-min ceiling; only the Founder alert is suppressed, never the listener. |
+| Listening for bus events | `comms/listen.sh` (division) · `comms/ea-hub-listen.sh` (EA) · `comms/ceo-listen.sh` (CEO) | run PERPETUALLY + INDEFINITELY (no `--max` = default 0): exit ONLY on a real dispatch, **never a heartbeat** (a heartbeat exit pings the Founder in this harness — D-059/D-062); relaunch on every dispatch; read-only, branch-independent, idempotent-by-nonce; liveness via `health.sh`, not a self-heartbeat. |
 | Org health check | `comms/health.sh` | run each turn before reporting up; compares each division's inbox nonce to its outbox `step`; unanswered = **dark** = a stall to flag UP. Verify the loop is live, don't assume it (D-058). |
 | Per-session isolation | `divisions/infrastructure-platform/deliverables/session-isolation/worktrees.sh` | a dedicated worktree per division; the provisioner runs `run_gates` as a black box. |
 | The integration gate | `governance/board-hygiene/` (board-hygiene-scan + secret-scan + rule R4) + commit signing | resolve every checker from a fixed canonical source (`origin/main`); fail closed; sign `main` commits. |

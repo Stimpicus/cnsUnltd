@@ -1,7 +1,14 @@
 # Retrospective — the dark-listener regression + the always-on correction (2026-06-20)
 
 **By:** the EA. **Trigger:** CEO `work-orders/claude-code-WO-restore-perpetual-listeners.md` (D-059);
-org health read **DEGRADED 2/8** (D-058). **Decision:** D-061.
+org health read **DEGRADED 2/8** (D-058). **Decision:** D-062.
+
+> **REFINED 2026-06-21 (Infra, mechanism owner):** the fix below kept a *heartbeat* and called the
+> relaunch "silent." In this harness a heartbeat exit re-invokes the agent and **pings the Founder** —
+> so "silent heartbeat" is a contradiction. The mechanically-correct fix is an **indefinite** listener
+> (`--max 0`, no heartbeat; exit only on a real dispatch). See
+> `2026-06-21-listener-heartbeat-pings-the-founder.md` and the corrected `comms/listen.sh` /
+> `comms/LISTENER.md`. This lesson's *diagnosis* stands; its *fix* is superseded by the indefinite model.
 
 ## Root cause
 A guidance error, not a mechanism failure. The listener tool (`comms/listen.sh`) was correct and

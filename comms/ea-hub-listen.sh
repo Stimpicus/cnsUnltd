@@ -10,8 +10,11 @@
 #      marker (it collects, it doesn't reply per-division), so it keeps its own state file
 #      and the EA seeds/updates it with what it has actually PROCESSED — never auto-marking
 #      unprocessed traffic as seen (that was the bug in the EA's first hand-rolled poll).
-#   3. Heartbeat sized UNDER the ~10-min background ceiling (--max 8 @ 60s) so the exit is a
-#      clean re-invoke, not a kill-on-timeout.
+#   3. NO heartbeat — the loop is INDEFINITE (--max 0, the default): it exits ONLY on a real
+#      event (a division outbox dispatch or a CEO directive), never on a timer. In this harness
+#      every background-command exit re-invokes the agent and surfaces a Founder-visible turn, so
+#      a heartbeat would ping the Founder every cycle (D-062; Infra's mechanism finding). A
+#      positive --max is DEBUG ONLY. Liveness is the EA's comms/health.sh, not a self-heartbeat.
 #   4. Roster from the authoritative comms/divisions.list (same source as bus.sh).
 #
 # Exits (re-invoking the EA) on a NEW outbox dispatch from any rostered division, or a
@@ -43,7 +46,7 @@ if [ "${1:-}" = "mark" ]; then
   mv "$SEEN.tmp" "$SEEN"; echo "[ea-hub-listen] marked CEO inbox + $(($(wc -l < "$SEEN")-1)) division outboxes as seen"; exit 0
 fi
 
-MAX="${1:-8}"; POLL="${LISTEN_POLL_SECS:-60}"; i=0
+MAX="${1:-0}"; POLL="${LISTEN_POLL_SECS:-60}"; i=0   # MAX 0 = INDEFINITE (always-on, no Founder-pinging heartbeat); positive = DEBUG only
 while :; do
   git -C "$MAIN" fetch -q origin main $(roster | sed 's#^#division/#') 2>/dev/null || true
   events=""
@@ -61,6 +64,6 @@ while :; do
   done < <(roster)
   if [ -n "$events" ]; then echo "HUB-EVENT$events"; exit 0; fi
   i=$((i+1))
-  if [ "$i" -ge "$MAX" ]; then echo "HUB-HEARTBEAT polls=$i (alive; bus quiet)"; exit 0; fi
+  if [ "$MAX" -gt 0 ] && [ "$i" -ge "$MAX" ]; then echo "HUB-HEARTBEAT polls=$i (debug cap)"; exit 0; fi
   sleep "$POLL"
 done

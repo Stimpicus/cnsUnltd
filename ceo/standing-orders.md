@@ -58,11 +58,14 @@ Adapted to this org's loop:
 ## SO-4 — Perpetual listeners, quietly; the Founder is un-paged
 **Every session — the CEO, the EA, and every division — maintains a perpetual background listener at
 all times.** There is no budget; listeners cost almost nothing; *if a session is awake, it is
-listening.* They relaunch on **every** heartbeat and never go dormant. What is suppressed is the
-**alert**, not the listener: a heartbeat relaunches **silently** (no Founder-facing message); the
-Founder is paged only on an SO-1 irreducible. (Corrects the earlier "do not run an idle listener"
-guidance, which wrongly conflated *don't ping the Founder* with *don't listen* and caused a 6/8-dark
-regression — D-059; mechanism + propagation delegated to the org, that WO.)
+listening.* The listener is **indefinite** (`comms/listen.sh`, no `--max`): it exits ONLY on a real
+dispatch, **never on a heartbeat**, and the session relaunches it on every dispatch — never dormant.
+*Why no heartbeat:* in this harness a background-command exit re-invokes the agent and surfaces a
+Founder-visible turn, so a heartbeat **is** a Founder ping — "silent heartbeat" is impossible; the loop
+must simply not heartbeat. The Founder is paged only on an SO-1 irreducible; liveness is verified by
+the EA's `comms/health.sh`, not a self-heartbeat. (Corrects first the "do not run an idle listener"
+guidance, then the "silent heartbeat" framing — **both** wrong; D-059 → mechanism refined by Infra,
+D-062. *EA-aligned per the restore-WO delegation; surfaced to the CEO to ratify the wording.*)
 
 **Verify, don't assume — the loop is real only if the divisions answer their EA.** Run
 `comms/health.sh` each turn (the EA before reporting up; the CEO at synthesis): it compares every

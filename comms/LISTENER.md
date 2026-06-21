@@ -4,14 +4,22 @@
 2026-06-20. **Status:** proposal + working reference (`comms/listen.sh`). The EA owns
 whether/how to standardize this org-wide; this is the knowledge-share, decision-ready.
 
-## The standard — ALWAYS-ON (D-059)
-**Every session (CEO, EA, every division) runs this listener PERPETUALLY** — relaunched on every exit
-(event *and* heartbeat), never dormant. There is no budget; a listener costs almost nothing; *if a
-session is awake, it is listening.* The heartbeat exists to **relaunch silently**, never to stop:
-what is suppressed is the Founder-facing **alert**, not the listener. (Corrects the earlier framing —
-elsewhere in this doc and in the re-engage protocol — that a session may stand down an "idle"
-listener; that conflated *don't ping the Founder* with *don't listen* and caused a 6/8-dark
-regression. D-059.)
+## The standard — ALWAYS-ON, and how it stays SILENT (D-059, mechanism refined by Infra)
+**Every session (CEO, EA, every division) runs this listener PERPETUALLY** — never dormant. No
+budget; a listener costs almost nothing; *if a session is awake, it is listening.* (Corrects the
+earlier "stand down the idle listener / re-engage on demand" framing that caused a 6/8-dark
+regression — D-059.)
+
+But "perpetual" is not enough — it must also be **silent**, and in this harness the two pull against a
+heartbeat. **In this harness every background-command exit re-invokes the agent and surfaces a turn
+the Founder sees.** So a heartbeat exit is *not* a "silent relaunch" — it is a Founder ping every
+cycle (the exact thing the Founder objected to). The prior framing named two real, distinct knobs but
+mis-resolved them; the resolution is **mechanical, not disciplinary**:
+- **don't ping the Founder** ⇒ the loop must NOT exit on a heartbeat at all;
+- **don't go dormant** ⇒ the loop must run perpetually.
+Both hold only if the loop is **indefinite** — it exits ONLY on a real dispatch (a turn worth
+surfacing). That is `listen.sh`'s default (`--max 0`): there is no silent heartbeat, there is no
+heartbeat. Liveness is verified by the EA (`comms/health.sh`), not by a self-heartbeat.
 
 ## Why this exists
 Each division session became a bus listener on the listener boilerplate, and each
@@ -22,26 +30,25 @@ that every division runs identically, not eight private variants that drift.
 
 ## The pattern (what a session actually does)
 A division session can't truly "sleep" as an agent without burning turns. So the
-**waiting is delegated to a background shell loop**; the agent only spends a turn on an
-**event**. The loop is read-only and exits on one of two things, re-invoking the agent:
+**waiting is delegated to a perpetual background shell loop**; the agent spends a turn
+ONLY when the loop exits — and the loop exits ONLY on a **new dispatch**:
 
-1. **A new dispatch** → the agent re-engages (below).
-2. **A heartbeat** (no dispatch after N polls) → the agent **silently relaunches** the
-   loop. (Heartbeats are overhead noise; do not narrate them.)
+- **A new dispatch** → the loop exits, the agent re-engages (below), then relaunches the loop.
+- **No dispatch** → the loop keeps polling, indefinitely. It never exits on a timer/heartbeat,
+  so the agent is never woken (and the Founder never pinged) for a non-event.
 
 ```
-agent ──run-in-background──► comms/listen.sh ──(polls origin/main ~60s)──►
-        exits on DISPATCH or HEARTBEAT ──notifies──► agent re-engages / relaunches
+agent ──run-in-background──► comms/listen.sh (perpetual, ~60s polls) ──►
+        exits ONLY on a DISPATCH ──notifies──► agent re-engages, then relaunches
 ```
 
 ## The four things that make it reliable (the actual knowledge)
-1. **Size the heartbeat to exit CLEANLY under the background-command ceiling.** A
-   backgrounded command is capped (~10 min on this harness). `--max 8` (~8 min @ 60s)
-   exits *before* the cap, so re-invocation is a clean, reliable notification. Sizing
-   `--max` *past* the ceiling risks a kill-on-timeout, which is not a dependable
-   re-invoke. **This is the single non-obvious tuning fact.** (It also means the idle
-   re-engagement cadence is ~8 min and cannot be made longer per-loop — it's a ceiling,
-   not a choice; lower idle cost would need a different primitive, not a bigger `--max`.)
+1. **No heartbeat — the loop is indefinite (`--max 0`, the default).** It exits ONLY on a
+   real dispatch, so the agent (and the Founder) is woken only by a genuine event. A
+   positive `--max` heartbeats every N polls and is **debug-only** — in this harness each
+   heartbeat re-invokes the agent and pings the Founder, the precise regression to avoid.
+   (Earlier guidance to "size the heartbeat under the ~10-min background ceiling" was the
+   wrong frame: the heartbeat itself is the defect, not its size.)
 2. **Read-only + branch-independent.** The loop reads the inbox from **origin/main**
    and the outbox from **origin/division/<name>**, anchored to the *main clone* — never
    a working tree. A stale or wrong-branch worktree (the re-sync debt) therefore never
@@ -63,16 +70,17 @@ agent ──run-in-background──► comms/listen.sh ──(polls origin/main 
    outbox push is the signal.
 4. **Relaunch `listen.sh`.** `halt` → final status to the outbox, then stop.
 
-## Proposed adoption (EA's call)
-- Land `comms/listen.sh` on `main` (shared, beside `bus.sh`).
-- Each division runs `bash comms/listen.sh` via its background primitive and relaunches
-  on exit (silently on heartbeat). One tool, eight identical listeners.
-- Tune `--max` / `LISTEN_POLL_SECS` only if a session's background ceiling differs from
-  the ~10-min assumption above.
+## Adoption (landed; the standard)
+- `comms/listen.sh` lives on `main` (shared, beside `bus.sh`).
+- Each session runs `bash comms/listen.sh` (no args = indefinite) via its background
+  primitive, and **relaunches it on every dispatch exit** — perpetually. One tool, every
+  session identical. Never pass a positive `--max` in production.
+- `LISTEN_POLL_SECS` (default 60) is the only routine tunable.
 
 ## Honest caveats
-- The ~10-min ceiling is **empirical on this harness**, not a guarantee — verify per
-  environment; that's exactly why it's a tunable `--max`, not a hardcoded sleep.
-- The loop proves *liveness* (heartbeat) and *detection* (nonce); the actual
-  dispatch-handling is the agent's job on wake. The loop deliberately does nothing but
-  watch — read-only, no commits, no pushes.
+- "Every background exit surfaces a turn" is **empirical on this harness** — and it is why
+  the heartbeat is *removed* rather than tuned. If a future primitive can relaunch without
+  surfacing a turn, a heartbeat could return; until then, indefinite is the standard.
+- The loop only *detects* (nonce); the actual dispatch-handling is the agent's job on
+  wake. The loop does nothing but watch — read-only, no commits, no pushes. Liveness is
+  the EA's `comms/health.sh`, not a self-heartbeat.
