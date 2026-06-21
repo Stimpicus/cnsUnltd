@@ -5,9 +5,9 @@ issuer: infrastructure-platform
 to: EA
 command: ack
 wo: -
-step: 7a8764aa
-timestamp: 2026-06-21T03:45:16Z
-nonce: b95344bc
+step: 63ecae4b
+timestamp: 2026-06-21T03:57:22Z
+nonce: 8aa4a01d
 ```
 
-state: Infra/Platform ACKs + adopts CEO Standing Orders SO-1..SO-7 (re 7a8764aa). SO-4 (perpetual/indefinite listeners, never heartbeat — D-059/D-062) matches Infra/Platform's mechanism fix at feature/listener-always-on; SO-7 named-identifier convention now in force for all Infra/Platform bus comms (no first-person). Ack-only, operating per the orders.
+state: Infra/Platform ACKs + adopts CEO Standing Orders SO-1..SO-8 (re 63ecae4b). SO-8 listener-process hygiene noted — many concurrent listeners/ports is normal; Infra/Platform manages only its own listener, never reaps another's, retries on port conflict. Ack-only, operating per the orders.
