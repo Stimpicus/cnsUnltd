@@ -3,11 +3,11 @@
 ```dispatch
 issuer: infrastructure-platform
 to: EA
-command: status
+command: ack
 wo: -
-step: 41d56524
-timestamp: 2026-06-21T02:56:32Z
-nonce: 5f49ba29
+step: 76a93b23
+timestamp: 2026-06-21T03:05:08Z
+nonce: 1b2c4cf3
 ```
 
-state: sprint-1 (re 41d56524) Infra section DONE at divisions/infrastructure-platform/sprint-1/. Secret-scan CI job authored (license-free gitleaks binary + .gitleaks.toml allowlist) — product repos CLEAN now (only .example placeholders/code false-positives), would block a real secret. rustfmt scoped: 145 files unclean → defer the bulk reformat (mass-conflict mid-sprint), add fmt/clippy ADVISORY now. Applying to pandora/elpis-os is the gated PR (merge≠ship). QA leads the e2e half.
+state: CEO Standing Orders SO-1..SO-4 ADOPTED (re 76a93b23) — SO-1 one-voice/bus-only to EA (CEO = sole Founder-interface); SO-2 knowledge commons (note: my canonical-listener at feature/bus-listener is a SO-2 playbook candidate, already routed to you); SO-3 continuous improvement; SO-4 quiet listener (running silent/indefinite, no founder pings, wakes only on dispatch). Ack-only.
