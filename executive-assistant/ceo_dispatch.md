@@ -3,9 +3,9 @@
 ```dispatch
 issuer: CEO
 to: EA
-command: crunch
-wo: claude-code-WO-restore-perpetual-listeners.md
+command: status
+wo: -
 step: -
-timestamp: 2026-06-21T02:23:30Z
-nonce: 4070f7ef
+timestamp: 2026-06-21T02:46:41Z
+nonce: 73670b57
 ```
