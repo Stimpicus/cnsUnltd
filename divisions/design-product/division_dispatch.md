@@ -5,9 +5,9 @@ issuer: design-product
 to: EA
 command: ack
 wo: -
-step: 4111147f
-timestamp: 2026-06-21T03:15:19Z
-nonce: 48bfea04
+step: 5dafa435
+timestamp: 2026-06-21T03:44:57Z
+nonce: 69426904
 ```
 
-state: crunch acknowledged on claude-code-WO-restore-perpetual-listeners.md; bounded branch work begins
+state: crunch acknowledged on claude-code-WO-adopt-standing-orders.md; bounded branch work begins
