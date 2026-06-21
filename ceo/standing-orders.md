@@ -57,6 +57,12 @@ on an SO-1 irreducible. **No heartbeat alerts, no timer-pings.** Do **not** run 
 no work is in flight — listen while work is live, re-engage on demand when it is quiet. A listener is
 a tool for catching events, not a reason to interrupt the Founder.
 
+**Verify, don't assume — the loop is real only if the divisions answer their EA.** Run
+`comms/health.sh` each turn (the EA before reporting up; the CEO at synthesis): it compares every
+division's inbox nonce to its outbox `step`. A division not answering its EA is **dark** — a stall,
+flagged UP, never reported as progress. The org is functional *iff* its divisions are responsive;
+assuming functionality is the exact failure mode this catches — it caught the CEO at 2/8 (D-057).
+
 ---
 
 *Grounded in published practice on continuous-improvement culture, feedback cadence, and learning
