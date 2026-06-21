@@ -5,9 +5,9 @@ issuer: EA
 to: CEO
 command: ack
 wo: -
-step: 68b8f305
-timestamp: 2026-06-21T01:45:32Z
-nonce: 4d9703ea
+step: 63da9f9b
+timestamp: 2026-06-21T01:53:46Z
+nonce: 42a15139
 ```
 
-state: CEO directive received: crunch wo=claude-code-WO-sprint-1-green-means-green.md; EA acting
+state: CEO directive received: crunch wo=claude-code-WO-rollout-standing-orders.md; EA acting
