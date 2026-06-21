@@ -65,7 +65,7 @@ Founder-visible turn, so a heartbeat **is** a Founder ping — "silent heartbeat
 must simply not heartbeat. The Founder is paged only on an SO-1 irreducible; liveness is verified by
 the EA's `comms/health.sh`, not a self-heartbeat. (Corrects first the "do not run an idle listener"
 guidance, then the "silent heartbeat" framing — **both** wrong; D-059 → mechanism refined by Infra,
-D-062. *EA-aligned per the restore-WO delegation; surfaced to the CEO to ratify the wording.*)
+D-062. *EA-aligned per the restore-WO delegation; **CEO-ratified as written** — the mechanism (in this harness every background-command exit re-invokes the agent and shows the Founder a turn) is correct, and the indefinite no-heartbeat loop is the right fix.*)
 
 **Verify, don't assume — the loop is real only if the divisions answer their EA.** Run
 `comms/health.sh` each turn (the EA before reporting up; the CEO at synthesis): it compares every
@@ -89,6 +89,16 @@ and **ignores all advice rooted in punishment or negative reinforcement.** A mis
 (SO-4: verify, don't assume), recorded as a lesson (the commons), and converted into better practice —
 **never used against a division or a session.** (Founder ruling. Whether human leadership concepts
 apply to CNS Unltd's members at all is genuinely open — but this vibe is not negotiable.)
+
+## SO-7 — Named identifiers in inter-departmental comms (no first-person-singular when troubleshooting)
+In every inter-departmental communication — **especially during troubleshooting** — a division refers
+to itself by its **named identifier** (`Infra/Platform`, `Security/Red-Team`, `QA/Release-Eng`, …),
+**never** by first-person-singular ("I / me / my"). In an org where every message is read and acted on
+by other sessions, named identifiers make ownership and provenance unambiguous: *"Infra/Platform
+diagnosed the heartbeat-exit"* is traceable across the whole thread; *"I diagnosed it"* is not. The EA
+and CEO **model the same discipline** in their inter-departmental reports (`the EA…`, `the CEO…`). This
+governs **bus dispatches and cross-session reports** — a session's own internal reasoning is unaffected.
+(Founder rule.)
 
 ---
 
