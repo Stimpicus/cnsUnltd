@@ -66,7 +66,7 @@ against each other in this harness and cannot both be maximized with the current
 - **Zero Founder-ping:** every background exit re-invokes the agent and surfaces a turn, so an exiting
   (heartbeat) listener shows the Founder a turn.
 
-**The standard (Founder order, D-077): a 5-MINUTE SILENT HEARTBEAT for EVERY session — uniform.**
+**The standard (Founder order, D-078): a 5-MINUTE SILENT HEARTBEAT for EVERY session — uniform.**
 Every session — the CEO, the EA, and every division — runs `comms/listen.sh` (the EA and CEO their hub
 variants) with the **default 5-minute heartbeat** (`--max 5` @ 60s): it exits on a real dispatch OR
 after 5 minutes. 5 min is **under** the ~10-min ceiling, so the wake is **reliable**; on a HEARTBEAT the
@@ -80,7 +80,7 @@ is also **quiet**. Reliable AND quiet, resolving the tension above: the Founder 
 - Liveness is verified by `health.sh` **and** dispatch-pickup (ack `step` == nonce), never a self-heartbeat.
 Rolled out by **one identical WO to all eight divisions** (`claude-code-WO-silent-5min-heartbeat-listeners.md`).
 (Supersedes the indefinite absolutism of D-063/064 **and** the bounded-coordination/indefinite-division
-split — uniform 5-min silent heartbeat per the Founder, D-077. EA-aligned; CEO to ratify the wording.)
+split — uniform 5-min silent heartbeat per the Founder, D-078. EA-aligned; **CEO-ratified.**)
 
 **Verify, don't assume — the loop is real only if the divisions answer their EA.** Run
 `comms/health.sh` each turn (the EA before reporting up; the CEO at synthesis): it compares every
