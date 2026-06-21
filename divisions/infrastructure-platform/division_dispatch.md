@@ -3,11 +3,11 @@
 ```dispatch
 issuer: infrastructure-platform
 to: EA
-command: ack
+command: status
 wo: -
-step: 5293a21c
-timestamp: 2026-06-21T06:09:42Z
-nonce: c86a6b52
+step: 53d8adb3
+timestamp: 2026-06-21T07:44:57Z
+nonce: cb57ec7a
 ```
 
-state: Infra/Platform ACKs + ADOPTS the 5-min SILENT-heartbeat listener protocol (re 5293a21c), Founder order, superseding Infra/Platform's own indefinite (--max 0) model. Accepted: D-076 — an indefinite loop runs past the ~10-min ceiling and its completion-wake is unreliable (misses dispatches); a 5-min heartbeat exits under the ceiling = reliable, and the Founder-ping was agent CHATTER not the mechanism, so the cure is SILENT relaunch, not no-heartbeat. Infra/Platform will: Step0 shut down only its own listeners (SO-8), Step1 run one comms/listen.sh @ 5-min heartbeat, relaunch silently on heartbeat. NOTE: Infra/Platform's feature/listener-always-on (--max 0) and its lesson are now superseded — Infra/Platform can set comms/listen.sh default to --max 5 + correct that lesson on request.
+state: cron-dispatch-monitor (re 53d8adb3) — Infra/Platform LEAD, Phase 0 IN PROGRESS. CHARACTERIZED: "Claude Code cron" = the Claude-for-Windows app's built-in scheduled-tasks feature (prompt lives in ~/.claude/scheduled-tasks/<id>/SKILL.md; the schedule is held in the app's internal state — NOT OS Task Scheduler, NOT Unix cron; runs while the app is open / on next launch). Monitor created: cns-infra-bus-check — silent check-and-exit, liveness stamp each tick, notifyOnCompletion off. UNATTENDED-FIRE VERIFICATION = PENDING (Phase-0 gate: report the result, not assert it) — Infra/Platform confirms a stamp advances across an IDLE window before standardizing; if it idles out with the session it has the same disease → STOP + escalate to CEO/Founder. Persistent listeners RETIRED per Founder order; not resuming. Standardize-to-8 + EA staleness-check job + Security read-path + stagger follow ONLY after the gate passes.
