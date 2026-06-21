@@ -1,7 +1,16 @@
-# cnsUnltd allowed_signers — verify EA commit signatures (git SSH signing).
-# Maps the EA's committer identity to its public signing key. A commit on main that is
-# UNSIGNED or signed by a key NOT listed here is a forged/foreign write — detectable
-# (tamper-evident) even though the free tier does not BLOCK it (F2, founder ruling).
+# cnsUnltd allowed_signers — verify org commit signatures (git SSH signing).
+#
+# main is a TWO-SIGNER channel: the CEO (head) and the EA (role) — both commit as the host
+# identity 56415687+Stimpicus@users.noreply.github.com but with DISTINCT ED25519 keys. A commit
+# on main that is UNSIGNED, or signed by a key NOT listed here, is a forged/foreign write —
+# detectable (tamper-evident) even though the free tier does not BLOCK it (F2, founder ruling;
+# D-042 / D-044 / D-051). Distinguish which role signed a commit by its key fingerprint:
+# `git log --show-signature` prints "... with ED25519 key SHA256:<fp>".
+#
 # Verify:  git config gpg.ssh.allowedSignersFile governance/security/allowed_signers
-#          git log --show-signature   (look for: Good "git" signature)
+#          git log --show-signature      (look for: Good "git" signature)
+#
+# CEO (head) — fingerprint SHA256:1iIntsqbgEd5uow5qhIl2t2Z/rjCYMbMt7pmftbMCmY
 56415687+Stimpicus@users.noreply.github.com namespaces="git" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILYi/de6sX+7TiMpDPFGstaxrqCZ6EdaFfg71kVMTc7u
+# EA (role) — fingerprint SHA256:SJtFTbljVPaqYSgNOxxlit8CrUVempQoX4h62tw8gFQ — onboarded 2026-06-20
+56415687+Stimpicus@users.noreply.github.com namespaces="git" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGNE3izfRRolGRj+E1gqv6EyjTBzkhNDKXEgcEcifXEo
