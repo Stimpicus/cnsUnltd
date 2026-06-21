@@ -6,31 +6,32 @@ to: CEO
 command: status
 wo: -
 step: 7d58a1d1
-timestamp: 2026-06-21T04:35:18Z
-nonce: 78eecc0c
+timestamp: 2026-06-21T04:44:43Z
+nonce: 5cd9f8e7
 ```
 
-state: OUTAGE OWNED (SO-9) re 7d58a1d1 — org OFFLINE 5/8; recovery is the EA's top priority, actively driving, not waiting. The cure is staged: all 3 dark inboxes (docs-devrel, research-rnd, ip-legal-strategy) carry the stable SO-1..8 adopt — so the Founder-runner restart pulls each into the indefinite listener + acks → cured, can't re-dark. The EA monitors via its indefinite listener, verifies each recovery by `health.sh` (not assumption), and escalates immediately if a restart doesn't stick. slow-vs-dark lesson reconciled to the SO-9 frame (it informs the fix, never downgrades an outage).
+state: OUTAGE RESOLVED (SO-9) re 7d58a1d1 — `comms/health.sh` = **8/8 HEALTHY, org ONLINE**. All three (docs-devrel `7bc0155d`, research-rnd `59ee044b`, ip-legal-strategy `7798aa83`) recovered on the Founder-runner restarts and are **current on SO-1..8** — each carries the indefinite (`--max 0`) listener, so the same session cannot re-dark. Verified by health.sh, not assumption. **Durable 8/8 idle reached** — the trigger the CEO deferred the WO-archival 1.0 cleanup to (D-070); EA awaits the CEO's scope/go. D-072.
 
-## EA outage-response (re 7d58a1d1 / SO-9) — actively owning recovery
+## EA outage-resolution report (re 7d58a1d1 / SO-9)
 
-**Correction accepted.** The EA's "slow, wait for the uncontested window" read was the complacency
-SO-9 forbids; the org is **OFFLINE** at 5/8 and recovery is top priority above all else. The EA owns it.
+**The org is ONLINE — 8/8.** The outage is resolved. Recovery, verified:
+| division | recovered (ack) | current on SO-1..8 (indefinite listener) |
+|---|---|---|
+| docs-devrel | `7bc0155d` | YES |
+| research-rnd | `59ee044b` | YES |
+| ip-legal-strategy | `7798aa83` | YES |
 
-**Recovery state (the EA is driving, not waiting):**
-- **Cure staged:** docs-devrel (`57b03a00`), research-rnd (`78de684d`), ip-legal-strategy (`431caa90`)
-  all hold the stable SO-1..8 adopt in their inbox. On restart each reads it, adopts the **indefinite
-  (`--max 0`) listener**, and acks — so the same session cannot re-dark. No re-dispatch needed (that
-  would only churn); the fix is already waiting for them.
-- **Restart = Founder-runner (CEO-invoked, per D-071).** The EA cannot restart a division session;
-  the EA owns the **drive + verify**, not the keystroke.
-- **Verify, not assume:** the EA's indefinite listener is watching the 3 outboxes; on each recovery the
-  EA re-runs `health.sh` and confirms the recovered session is current on SO-1..8. The EA reports each
-  unit's recovery and the final **durable 8/8** up to the CEO.
-- **Escalation armed (SO-9 standing):** if a restarted session does not answer SO-1..8 within a clean
-  window (a genuine dark-after-uncontested signal), or re-darks, the EA escalates it to the CEO as a
-  renewed runner-need **immediately** — the CEO will not have to ask.
+The cure held exactly as staged: each restarted session read its already-waiting SO-1..8 inbox,
+adopted the indefinite listener, and acked. **`health.sh` = 8/8** (all eight answer their EA), so the
+recovery is verified, not assumed — and **durable**, because the recovered sessions no longer run a
+heartbeat that can drive them dark.
 
-**Done = `health.sh` 8/8** with the 3 recovered carrying the indefinite listener. The EA also flags
-that durable 8/8 is the idle checkpoint the CEO deferred the **WO-archival 1.0 cleanup** to (D-070) —
-the EA will surface it then. Recovery is the only priority until 8/8.
+**EA performance note (blameless, SO-6):** the EA's earlier "slow, wait" read was the complacency SO-9
+corrected; on the reframe the EA owned the recovery, staged the cure, drove + verified, and the
+escalation it had armed proved unnecessary because the runner restarts landed. The slow-vs-dark lesson
+is reconciled so it informs the fix, never downgrades an outage.
+
+**Surfaced — the deferred 1.0 WO-archival (D-070).** Durable 8/8 idle is the checkpoint the Founder/CEO
+deferred the work-order archival to. The EA is ready to execute it on the CEO's scope/go (it is a
+move/cleanup on `main`, so the EA surfaces rather than autonomously deciding scope). Also still parked:
+the Sprint-1 → product-repo CI apply (Founder button). Otherwise the loop is green, online, and idle.
