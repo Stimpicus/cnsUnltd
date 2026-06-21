@@ -5,9 +5,9 @@ issuer: development
 to: EA
 command: ack
 wo: -
-step: 661c5438
-timestamp: 2026-06-20T22:38:25Z
-nonce: 5bdda545
+step: 7a1f1aef
+timestamp: 2026-06-21T02:50:06Z
+nonce: 4e9458fb
 ```
 
-state: crunch acknowledged on claude-code-WO-comms-discipline-bus-only.md; bounded branch work begins
+state: crunch acknowledged on claude-code-WO-adopt-standing-orders.md; bounded branch work begins
