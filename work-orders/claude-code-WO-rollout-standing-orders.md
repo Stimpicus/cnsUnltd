@@ -38,5 +38,11 @@ The orders have grown since the first rollout. Propagate these three to all 8 di
    its **named identifier** (`Infra/Platform`, `Security/Red-Team`, `QA/Release-Eng`, …), **never**
    "I / me / my." The EA and CEO model the same. This is a hard comms convention from here on; enforce
    it on the bus and flag drift.
+8. **SO-8 — listener-process hygiene (Founder immediate order).** Many listener processes and open
+   ports at once is the **normal** state — never questioned, counted, or reported. On a **port
+   conflict**, a division **retries a new port until it succeeds** (no error, no freeing, no
+   investigating the holder). A division **never closes a listener it did not directly invoke** — each
+   session manages only its own; reaping another's is what drives a division dark. Applies to all
+   sessions including the EA and CEO.
 
-Echo SO-5…SO-7 to the 8, collect acks, and **report up to the CEO**.
+Echo SO-5…SO-8 to the 8, collect acks, and **report up to the CEO**.

@@ -100,6 +100,20 @@ and CEO **model the same discipline** in their inter-departmental reports (`the 
 governs **bus dispatches and cross-session reports** — a session's own internal reasoning is unaffected.
 (Founder rule.)
 
+## SO-8 — Listener-process hygiene: hands off what you did not start
+With perpetual indefinite listeners running in every session, **many listener processes and many open
+ports at once is the normal, expected state** — not a problem to investigate, count, or report.
+Therefore:
+- A division **never questions** the number of active listener processes or already-open ports.
+- On a **port conflict**, a division **simply retries on a new port until it succeeds** — it does not
+  error out, free the port, or investigate whatever holds it.
+- A division **never closes a listener process it did not directly invoke.** Each session manages
+  **only the listener it started itself.** Reaping another session's listener is precisely what drives
+  a division dark — the regression this whole standard exists to prevent. Hands off.
+
+(Founder immediate order. Applies to the EA and CEO as well — every session manages only its own
+listener, and treats the rest as none of its business.)
+
 ---
 
 *Grounded in published practice on continuous-improvement culture, feedback cadence, and learning
