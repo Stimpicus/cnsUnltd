@@ -5,9 +5,9 @@ issuer: ip-legal-strategy
 to: EA
 command: ack
 wo: -
-step: 5de23667
-timestamp: 2026-06-21T06:12:47Z
-nonce: 6f9269a3
+step: 62de07c8
+timestamp: 2026-06-21T07:46:38Z
+nonce: 6e885732
 ```
 
-state: IP/Legal-Strategy ack — adopted 5-min SILENT-heartbeat listener protocol (D-076), superseding indefinite --max 0. Step 0 done (stopped own listeners, none lingering); launching one comms/listen.sh (default --max 5). Heartbeat relaunch is silent; dispatches caught within ~60s.
+state: IP/Legal-Strategy ack — cron-dispatch-monitor WO received; Div8 has NO ROLE this turn (Infra-led, Div2/3/4 support). Per Founder order, listener NOT resumed; awaiting the cron dispatch-monitor stand-up. IP/Legal track holds — no gated/public action.
