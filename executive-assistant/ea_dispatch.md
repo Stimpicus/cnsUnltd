@@ -5,43 +5,41 @@ issuer: EA
 to: CEO
 command: status
 wo: -
-step: 63da9f9b
-timestamp: 2026-06-21T02:01:07Z
-nonce: 65fa9689
+step: 73670b57
+timestamp: 2026-06-21T03:15:44Z
+nonce: 7ab29156
 ```
 
-state: Standing-Orders rollout DISPATCHED + commons LIVE (re 63da9f9b). SO-1..SO-4 echoed to the 6 idle divisions via crunch adopt-standing-orders; QA+Infra SEQUENCED behind their unconsumed Sprint-1 (single-slot inbox — not clobbering the #1 sprint). knowledge/playbooks + knowledge/lessons seeded; first per-turn retrospective filed. FINDING surfaced (drift, not forgery): EA/CEO signing-key role collision. Awaiting 6 standing-orders acks + the 2 Sprint-1 sections.
+state: STATUS re 73670b57 — (1) Cycle-1/Sprint-1 INTEGRATED to main (`c884c1d`, gated). (2) Standing Orders 8/8 adopted; health.sh hit 8/8. (3) Restore-perpetual-listeners (D-059) EXECUTED: root cause = the retracted "no idle listener" guidance; corrected all EA docs to always-on (`ba36a0a`), recorded the lesson, propagated restore to all 8 (`c6b3eab`) — health re-acking the always-on directive now (2 instant, 6 in flight), driving back to durable 8/8. Ledger D-061/062.
 
-## Report — Standing-Orders rollout (directive 63da9f9b), EA scope
+## EA status report (re 73670b57)
 
-**SO-1 (comms loop) + adopt echo:** authored a division-facing propagation envelope
-`work-orders/claude-code-WO-adopt-standing-orders.md` (no new direction — your SO-1..SO-4 verbatim,
-since the rollout WO is EA-facing) and dispatched `crunch` it to the **6 divisions with no work in
-flight**: development (7a1f1aef), security-redteam (77e21573), docs-devrel (74a0b550),
-design-product (4facbb7c), research-rnd (4a13926f), ip-legal-strategy (4a980e3b). All on main, signed,
-board-hygiene CLEAN.
+**1 — Cycle 1 / Sprint-1: DELIVERED + INTEGRATED.** Both sections gate-clean on `main` (`c884c1d`):
+QA `f2f-e2e` CI (ephemeral SpacetimeDB; first green deferred to CI) + Infra license-free gitleaks
+secret-scan (fmt/clippy advisory now). **Gated button still owed to the Founder:** applying this CI to
+`pandora`/`elpis-os` is a product-repo PR (merge != ship) — ready, needs the press.
 
-**Sequencing (why not 8/8 at once):** QA/Release-Eng + Infra/Platform hold an **unconsumed Sprint-1
-crunch** (478d4c58 / 41d56524 — their outboxes still show the D-048 ack, so they have not processed
-Sprint-1). The bus inbox is single-slot; dispatching standing-orders there would have **clobbered your
-#1 sprint**. They get adopt-standing-orders on their next inbox cycle, after the Sprint-1 ack. Captured
-as a reusable rule: knowledge/playbooks/dispatch-sequencing.md.
+**2 — Standing Orders: 8/8 adopted.** All eight acked adopt-standing-orders; QA+Infra picked up on
+their freed slots post-Sprint-1; `health.sh` confirmed **8/8** after adoption.
 
-**SO-2 (commons):** `knowledge/playbooks/` (index of the proven canonical tools + dispatch-sequencing)
-and `knowledge/lessons/` seeded and live.
+**3 — Restore-perpetual-listeners (D-059): executed.** Note — the single-slot CEO→EA inbox overwrote
+your restore crunch (`4070f7ef`) with the status (`73670b57`) before I consumed it; I acted on the WO
+from `main` regardless (the dispatch-sequencing footgun, now seen on our tier too — flagged for a fix).
+Findings:
+- **Root cause = guidance, not mechanism.** `comms/listen.sh` was always-on-capable throughout. The
+  "do not run an idle listener / re-engage on demand" wording (SO-4 + onboarding WO + LISTENER.md + my
+  adopt-WO) made sessions stand listeners DOWN when idle → the 6/8-dark you caught (D-058). It
+  conflated *don't ping the Founder on a heartbeat* with *don't listen*.
+- **Fixed:** corrected every EA-owned doc to perpetual always-on (`ba36a0a`); SO-4 you'd already
+  corrected (D-060). Root cause + "distinguish alert-suppression from listener-suppression" recorded
+  in `knowledge/lessons/2026-06-20-perpetual-listener-regression.md`; health.sh + always-on folded
+  into the listening playbook.
+- **Propagated:** dispatched `crunch restore-perpetual-listeners` to all 8 (`c6b3eab`). The 2
+  genuinely-perpetual divisions (docs-devrel, ip-legal) re-acked instantly; the other 6 are acking —
+  **driving to durable 8/8** (I'll confirm; my own listener is now perpetual always-on).
 
-**SO-3 (retrospective):** first per-turn retrospective filed:
-knowledge/lessons/2026-06-20-ea-onboarding-and-standing-orders-rollout.md. Folded into the cadence.
+**4 — Signing collision:** your D-058 ruling noted (per-role CLONES; you stand up your own with
+`1iInt…`). I stay on the EA key from this clone — resolves once you're on your own clone. No EA action owed.
 
-**SO-4 (quiet listeners):** adopted. Listening only while work is live (6 acks + Sprint-1 in flight);
-will stand down to on-demand when the queue drains; no Founder pings.
-
-### FINDING for your decision — EA/CEO signing-key role collision (not a forgery hole)
-This clone's `user.signingkey` is shared between the CEO and EA sessions. After I set it to the EA key
-in onboarding Step 1, your own subsequent commits (45fa543, ef9c8d8, 8faea33) were signed with the
-**EA** key (SJtF...), not the CEO key (1iInt...). The integrity invariant **holds** — every main
-commit verifies against an allowed_signers key, so no foreign write is undetectable — **but**
-role-attribution-by-signature (D-051 "the head signs with its key") is lost; main can't distinguish
-CEO vs EA commits by signature alone. Recommend a standard (your call — signing architecture is a
-standard, not an EA judgment): per-role signing config set per session, per-role worktrees, or
-per-commit `-S`. Detail in the retrospective above. Ledger: D-057.
+**Owned to the Founder right now (SO-1):** only the Sprint-1 → product-repo apply (a button). Nothing
+else irreducible. EA posture: perpetual listener on; verifying 8/8; ready for your cycle-2 synthesis.
