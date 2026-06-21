@@ -4,8 +4,8 @@
 issuer: EA
 to: development
 command: crunch
-wo: claude-code-WO-comms-discipline-bus-only.md
+wo: claude-code-WO-adopt-standing-orders.md
 step: -
-timestamp: 2026-06-20T22:36:43Z
-nonce: 661c5438
+timestamp: 2026-06-21T01:56:00Z
+nonce: 7a1f1aef
 ```

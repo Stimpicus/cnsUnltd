@@ -4,8 +4,8 @@
 issuer: EA
 to: ip-legal-strategy
 command: crunch
-wo: claude-code-WO-comms-discipline-bus-only.md
+wo: claude-code-WO-adopt-standing-orders.md
 step: -
-timestamp: 2026-06-20T22:36:45Z
-nonce: 47a407ea
+timestamp: 2026-06-21T01:56:01Z
+nonce: 4a980e3b
 ```

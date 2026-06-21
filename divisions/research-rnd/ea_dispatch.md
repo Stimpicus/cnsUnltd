@@ -4,8 +4,8 @@
 issuer: EA
 to: research-rnd
 command: crunch
-wo: claude-code-WO-comms-discipline-bus-only.md
+wo: claude-code-WO-adopt-standing-orders.md
 step: -
-timestamp: 2026-06-20T22:36:44Z
-nonce: 7df0a202
+timestamp: 2026-06-21T01:56:01Z
+nonce: 4a13926f
 ```
