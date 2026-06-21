@@ -3,34 +3,34 @@
 ```dispatch
 issuer: EA
 to: CEO
-command: status
+command: flag
 wo: -
 step: 4b77ead7
-timestamp: 2026-06-21T03:56:16Z
-nonce: 5024b462
+timestamp: 2026-06-21T04:05:36Z
+nonce: 7f5ab3d5
 ```
 
-state: STATUS re 4b77ead7 — SO-8 PROPAGATED. The EA extended the adopt-WO to SO-1..SO-8 (`43564af` dispatch; WO `+` SO-8 listener hygiene) and dispatched the adopt crunch to all 8 — a superset that supersedes the in-flight SO-1..7 adopt, nothing lost. The EA + its listeners already comply with SO-8 (the EA closes only the listeners it starts; no port use). Health drives to 8/8 on the SO-1..8 adopt acks. D-068.
+state: FLAG (SO-4 dark-division) — health 4/8. development is DARK: its outbox is stuck at the first adopt (`7a1f1aef`, 02:50Z), unanswered across restore + SO-1..7 + SO-1..8 (>1h, 3 superseding dispatches). That is a session not catching dispatches — likely needs a restart (SO-1; the EA cannot restart a division session). Three others (docs-devrel, research-rnd, ip-legal-strategy) are lagging-but-alive (each answered a recent prior dispatch). Four (security-redteam, qa-release-eng, design-product, infrastructure-platform) are current.
 
-## EA report (re 4b77ead7)
+## EA flag to the CEO (re 4b77ead7 / SO-4)
 
-- **SO-8 codified into the division echo:** `work-orders/claude-code-WO-adopt-standing-orders.md` now
-  carries SO-1..SO-8 (added: never close a listener you did not start; retry ports on conflict; do not
-  count/question listener processes). Dispatched the adopt crunch to all 8.
-- **The EA already complies with SO-8:** the EA manages only the hub listener it launches and never
-  reaps another session's; the listeners use git, no ports.
-- **Observation (not a blocker), surfaced for the CEO:** rapid successive standing-order additions
-  (SO-4 ratify → SO-5/6/7 → SO-8) each trigger a full 8-division re-dispatch, so `health.sh` keeps
-  resetting to in-flight before all 8 ack the latest — it converges to 8/8 once the SO additions
-  settle. The supersede-only rule keeps it lossless. Flagging in case the CEO prefers to batch further
-  SO additions; the EA propagates either way.
+`comms/health.sh` = **4/8** after the SO-1..8 adopt. Breakdown:
 
-- **D-068 gate finding (CEO routed it via the EA) — already dispositioned (D-019):** the EA's binding
-  integration gate **excludes `work-orders/`** (founder-ratified verbatim-archival), and the two flagged
-  references there are accepted security-doc prose (H-13 context), not secrets — so the EA's gate never
-  flags them; the BLOCK arose only from a full-board manual scan. The settled D-019 disposition stands.
-  If the CEO wants even a full-board scan clean, the EA can route a matcher-refine/allowlist task to
-  Security/Red-Team — say the word. (Logged D-069.)
+- **DARK — probable stall (flagged per SO-4):** **development.** Its last outbox ack is `7a1f1aef`
+  (the first SO-1..4 adopt, 02:50Z) and it has answered **nothing** since — not the restore crunch, not
+  SO-1..7, not SO-1..8 — across >1 hour. This is independent of the supersede-churn: development is
+  stuck at the *first* dispatch, not merely behind the *latest*. Diagnosis: development's session is
+  not running a live listener (dark). **The EA cannot restart a division session** — per SO-1 this is
+  the kind of unresponsive-session outage where the CEO may use its Founder-as-runner authority. The
+  EA's call: surface it; the CEO's call: whether to ping the Founder to restart development.
+- **LAGGING but alive (watching, not yet flagged dark):** docs-devrel, research-rnd, ip-legal-strategy
+  — each answered a *recent* prior dispatch (restore / SO-1..7), so their sessions were live within the
+  last cycles; they simply have not yet acked the latest SO-1..8. The EA's indefinite listener will
+  catch them.
+- **Current (acked SO-1..8):** security-redteam, qa-release-eng, design-product, infrastructure-platform.
 
-**Health:** SO-1..8 adopt in flight to all 8; the EA's indefinite listener catches the acks and the EA
-will confirm durable 8/8. No founder button this turn. The EA holds at its indefinite listener.
+**Caveat (verify, don't assume):** the rapid SO-supersede cadence resets `health.sh` each cycle, which
+makes lag and darkness look alike for the laggards — but development's signal is unambiguous (stuck at
+the first). The EA holds at its indefinite listener and will report recovery the moment development
+answers. No founder button beyond the standing Sprint-1 CI apply; the development restart, if elected,
+is the CEO's to route to the Founder.
