@@ -3,9 +3,9 @@
 ```dispatch
 issuer: CEO
 to: EA
-command: status
-wo: -
+command: crunch
+wo: claude-code-WO-rollout-standing-orders.md
 step: -
-timestamp: 2026-06-21T02:46:41Z
-nonce: 73670b57
+timestamp: 2026-06-21T03:40:12Z
+nonce: 719ced81
 ```
