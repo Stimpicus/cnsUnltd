@@ -10,7 +10,7 @@
 #      marker (it collects, it doesn't reply per-division), so it keeps its own state file
 #      and the EA seeds/updates it with what it has actually PROCESSED — never auto-marking
 #      unprocessed traffic as seen (that was the bug in the EA's first hand-rolled poll).
-#   3. 5-MINUTE SILENT HEARTBEAT (--max 5 @ 60s, the default; Founder order D-077). The loop exits
+#   3. 5-MINUTE SILENT HEARTBEAT (--max 5 @ 60s, the default; Founder order D-078). The loop exits
 #      on a real event OR after 5 min; on a HEARTBEAT the EA RELAUNCHES SILENTLY — zero Founder-facing
 #      output (no prose, no narration, no report). 5 min is UNDER the ~10-min ceiling so the re-invoke
 #      is dependable (an indefinite loop dropped wakes past idle — D-076); silent because the Founder
@@ -47,7 +47,7 @@ if [ "${1:-}" = "mark" ]; then
   mv "$SEEN.tmp" "$SEEN"; echo "[ea-hub-listen] marked CEO inbox + $(($(wc -l < "$SEEN")-1)) division outboxes as seen"; exit 0
 fi
 
-MAX="${1:-5}"; POLL="${LISTEN_POLL_SECS:-60}"; i=0   # MAX 5 = 5-min SILENT heartbeat (under the ~10-min ceiling = reliable wake); agent relaunches SILENTLY on heartbeat (D-077)
+MAX="${1:-5}"; POLL="${LISTEN_POLL_SECS:-60}"; i=0   # MAX 5 = 5-min SILENT heartbeat (under the ~10-min ceiling = reliable wake); agent relaunches SILENTLY on heartbeat (D-078)
 while :; do
   git -C "$MAIN" fetch -q origin main $(roster | sed 's#^#division/#') 2>/dev/null || true
   events=""

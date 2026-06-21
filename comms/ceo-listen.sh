@@ -2,7 +2,7 @@
 # comms/ceo-listen.sh — the CEO listener. The mirror of ea-hub-listen.sh for the one channel the
 # CEO watches: the EA's outbox (executive-assistant/ea_dispatch.md, EA→CEO reports-up) on origin/main.
 # Same rules: READ-ONLY + branch-independent (anchored to the main clone), idempotent by a local
-# last-SEEN nonce, and a 5-MINUTE SILENT HEARTBEAT (--max 5 @ 60s, the default; Founder order D-077):
+# last-SEEN nonce, and a 5-MINUTE SILENT HEARTBEAT (--max 5 @ 60s, the default; Founder order D-078):
 # exits on a new EA report OR after 5 min. 5 min is UNDER the ~10-min ceiling so the re-invoke is
 # dependable (an indefinite loop dropped wakes past idle — D-076); the CEO RELAUNCHES SILENTLY on a
 # heartbeat (zero Founder-facing output) — the Founder is pinged by chatter, not the mechanism.
@@ -25,7 +25,7 @@ if [ "${1:-}" = "mark" ]; then
   ea_nonce > "$SEEN"; echo "[ceo-listen] marked EA outbox seen (nonce=$(cat "$SEEN" 2>/dev/null))"; exit 0
 fi
 
-MAX="${1:-5}"; POLL="${LISTEN_POLL_SECS:-60}"; i=0   # MAX 5 = 5-min SILENT heartbeat (under the ~10-min ceiling = reliable wake); relaunch SILENTLY on heartbeat (D-077)
+MAX="${1:-5}"; POLL="${LISTEN_POLL_SECS:-60}"; i=0   # MAX 5 = 5-min SILENT heartbeat (under the ~10-min ceiling = reliable wake); relaunch SILENTLY on heartbeat (D-078)
 while :; do
   git -C "$MAIN" fetch -q origin main 2>/dev/null || true
   n="$(ea_nonce)"

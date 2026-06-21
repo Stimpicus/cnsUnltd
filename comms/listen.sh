@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # comms/listen.sh — canonical division bus listener (the cheap shell wait).
-# ONE copy, every division. 5-MINUTE SILENT-HEARTBEAT standard (Founder order, D-077):
+# ONE copy, every division. 5-MINUTE SILENT-HEARTBEAT standard (Founder order, D-078):
 #   * exits (re-invoking the agent) on a NEW dispatch — the agent processes + reports; OR
 #   * exits on a 5-MINUTE HEARTBEAT (--max 5 @ 60s) — the agent RELAUNCHES SILENTLY and says
 #     NOTHING (no Founder-facing output, no prose, no narration). Only a real dispatch ever

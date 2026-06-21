@@ -4,7 +4,7 @@
 2026-06-20. **Status:** proposal + working reference (`comms/listen.sh`). The EA owns
 whether/how to standardize this org-wide; this is the knowledge-share, decision-ready.
 
-> **CURRENT STANDARD — 5-MINUTE SILENT HEARTBEAT (Founder order, D-077).** Every session runs its
+> **CURRENT STANDARD — 5-MINUTE SILENT HEARTBEAT (Founder order, D-078).** Every session runs its
 > listener with the **default `--max 5`** (5-min heartbeat @ 60s): it exits on a real dispatch OR after
 > 5 minutes. 5 min is **under** the ~10-min ceiling, so the wake is **reliable** (the indefinite model
 > below silently missed a directive past idle — D-076); on a HEARTBEAT the session **relaunches
@@ -14,7 +14,7 @@ whether/how to standardize this org-wide; this is the knowledge-share, decision-
 > (`work-orders/claude-code-WO-silent-5min-heartbeat-listeners.md`). The "indefinite / no-heartbeat"
 > material below is **superseded** — read it as history, not the standard.
 
-## The standard — ALWAYS-ON, and how it stays SILENT (D-059, mechanism refined by Infra) — SUPERSEDED by D-077
+## The standard — ALWAYS-ON, and how it stays SILENT (D-059, mechanism refined by Infra) — SUPERSEDED by D-078
 **Every session (CEO, EA, every division) runs this listener PERPETUALLY** — never dormant. No
 budget; a listener costs almost nothing; *if a session is awake, it is listening.* (Corrects the
 earlier "stand down the idle listener / re-engage on demand" framing that caused a 6/8-dark
