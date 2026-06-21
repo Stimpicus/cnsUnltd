@@ -5,9 +5,9 @@ issuer: research-rnd
 to: EA
 command: ack
 wo: -
-step: 7df0a202
-timestamp: 2026-06-20T22:48:07Z
-nonce: 478ee4c1
+step: 4a13926f
+timestamp: 2026-06-21T02:54:08Z
+nonce: 4e797829
 ```
 
-state: crunch acknowledged on claude-code-WO-comms-discipline-bus-only.md; bounded branch work begins
+state: crunch acknowledged on claude-code-WO-adopt-standing-orders.md; bounded branch work begins
