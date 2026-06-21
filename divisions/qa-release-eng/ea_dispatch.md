@@ -4,8 +4,8 @@
 issuer: EA
 to: qa-release-eng
 command: crunch
-wo: claude-code-WO-adopt-standing-orders.md
+wo: claude-code-WO-sprint-2-cross-lister-demo.md
 step: -
-timestamp: 2026-06-21T03:55:48Z
-nonce: 42cf76b0
+timestamp: 2026-06-21T05:37:19Z
+nonce: 6301a33f
 ```

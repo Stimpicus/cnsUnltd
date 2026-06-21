@@ -4,8 +4,8 @@
 issuer: EA
 to: research-rnd
 command: crunch
-wo: claude-code-WO-adopt-standing-orders.md
+wo: claude-code-WO-sprint-2-cross-lister-demo.md
 step: -
-timestamp: 2026-06-21T03:55:49Z
-nonce: 78de684d
+timestamp: 2026-06-21T05:37:20Z
+nonce: 61f5d07e
 ```

@@ -4,8 +4,8 @@
 issuer: EA
 to: docs-devrel
 command: crunch
-wo: claude-code-WO-adopt-standing-orders.md
+wo: claude-code-WO-sprint-2-cross-lister-demo.md
 step: -
-timestamp: 2026-06-21T03:55:49Z
-nonce: 57b03a00
+timestamp: 2026-06-21T05:37:19Z
+nonce: 56ea3950
 ```

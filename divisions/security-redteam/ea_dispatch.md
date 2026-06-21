@@ -4,8 +4,8 @@
 issuer: EA
 to: security-redteam
 command: crunch
-wo: claude-code-WO-adopt-standing-orders.md
+wo: claude-code-WO-sprint-2-cross-lister-demo.md
 step: -
-timestamp: 2026-06-21T03:55:48Z
-nonce: 48e833f7
+timestamp: 2026-06-21T05:37:19Z
+nonce: 65f3dd93
 ```
