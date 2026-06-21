@@ -14,3 +14,4 @@ What to retire / Surfaced upward**.
 - [2026-06-20 — the dark-listener regression + the always-on correction](2026-06-20-perpetual-listener-regression.md)
 - [2026-06-21 — a heartbeat IS a Founder ping (the mechanism; indefinite listeners)](2026-06-21-listener-heartbeat-pings-the-founder.md) *(Infra)*
 - [2026-06-21 — "slow" vs "dark": don't flag a restart under dispatch churn](2026-06-21-slow-vs-dark-under-dispatch-churn.md)
+- [2026-06-21 — the indefinite listener wakes unreliably past the idle ceiling](2026-06-21-listener-wake-reliability.md)
