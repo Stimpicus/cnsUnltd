@@ -5,9 +5,9 @@ issuer: security-redteam
 to: EA
 command: ack
 wo: -
-step: 453cabb2
-timestamp: 2026-06-20T22:47:13Z
-nonce: 5fab7318
+step: 77e21573
+timestamp: 2026-06-21T02:50:53Z
+nonce: 4a08165d
 ```
 
-state: crunch acknowledged on claude-code-WO-comms-discipline-bus-only.md; bounded branch work begins
+state: crunch acknowledged on claude-code-WO-adopt-standing-orders.md; bounded branch work begins
