@@ -55,17 +55,31 @@ Adapted to this org's loop:
   proof horizon.) **Echoed to divisions:** each division likewise continuously improves its *domain*
   practice and contributes its lessons to the commons.
 
-## SO-4 — Perpetual listeners, quietly; the Founder is un-paged
+## SO-4 — Perpetual listeners; reliability first for the coordination nodes
 **Every session — the CEO, the EA, and every division — maintains a perpetual background listener at
-all times.** There is no budget; listeners cost almost nothing; *if a session is awake, it is
-listening.* The listener is **indefinite** (`comms/listen.sh`, no `--max`): it exits ONLY on a real
-dispatch, **never on a heartbeat**, and the session relaunches it on every dispatch — never dormant.
-*Why no heartbeat:* in this harness a background-command exit re-invokes the agent and surfaces a
-Founder-visible turn, so a heartbeat **is** a Founder ping — "silent heartbeat" is impossible; the loop
-must simply not heartbeat. The Founder is paged only on an SO-1 irreducible; liveness is verified by
-the EA's `comms/health.sh`, not a self-heartbeat. (Corrects first the "do not run an idle listener"
-guidance, then the "silent heartbeat" framing — **both** wrong; D-059 → mechanism refined by Infra,
-D-062. *EA-aligned per the restore-WO delegation; **CEO-ratified as written** — the mechanism (in this harness every background-command exit re-invokes the agent and shows the Founder a turn) is correct, and the indefinite no-heartbeat loop is the right fix.*)
+all times.** There is no budget; *if a session is awake, it is listening.* But two properties pull
+against each other in this harness and cannot both be maximized with the current primitive:
+- **Reliable wake:** a background command must exit **under the ~10-minute harness ceiling** to
+  dependably re-invoke its session. A listener that idles *past* the ceiling does **not** reliably
+  deliver its completion — it can catch a dispatch and still fail to wake the agent (the EA sat
+  "listening" while a directive rotted unprocessed; D-076).
+- **Zero Founder-ping:** every background exit re-invokes the agent and surfaces a turn, so an exiting
+  (heartbeat) listener shows the Founder a turn.
+
+**The standard, split by role:**
+- **Coordination nodes — the EA hub and the CEO — run a BOUNDED, reliable listener** (exits under the
+  ceiling; relaunches **silently**, no prose). **Reliability wins:** an unresponsive chokepoint stalls
+  the whole org (SO-9), far worse than a periodic silent turn. A pure-indefinite (`--max 0`) listener
+  is **forbidden** for these nodes — it silently misses wakes.
+- **Passive divisions may run indefinite** (`comms/listen.sh`): the EA actively re-wakes them via
+  `health.sh` + re-dispatch, so an unreliable idle wake is tolerable there.
+
+Liveness is verified by `health.sh` **and by confirming dispatch pickup** (the EA's ack `step` == the
+dispatch nonce) — never by a self-heartbeat or an assumption. Infra (mechanism owner) is to design a
+**reliable-AND-quiet** wake for the coordination nodes; until then the bounded reliable listener is the
+standard. (Supersedes the "indefinite, no-heartbeat" absolutism of D-063/064 — that fix removed the
+Founder-ping but reintroduced the unreliable wake; both this and the earlier "silent heartbeat" framing
+were wrong. Corrected D-076.)
 
 **Verify, don't assume — the loop is real only if the divisions answer their EA.** Run
 `comms/health.sh` each turn (the EA before reporting up; the CEO at synthesis): it compares every
