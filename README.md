@@ -13,10 +13,15 @@ remains standing hygiene regardless.
 ## What's here
 ```
 charter/        Mission, Vision, Values, Cornerstones, Lore — the soul + the constitution
-governance/     Decision ledger, resource model, deliverable spec, lifecycle, merge policy
+ceo/            The CEO's standing orders (SO-1..8) + cycle syntheses
+executive-assistant/   The EA — sole dispatcher + integrator; runs the bus
 divisions/      One directory per division (the live board view) — branch = workshop, dir = display case
-executive-assistant/   The autonomous conductor that turns the lifecycle loop
+governance/     Decision ledger, security + board-hygiene gate, lifecycle, merge policy
+comms/          The git-as-message-bus + the listeners + the health check
+knowledge/      The commons — playbooks + lessons
+work-orders/    CEO directives the EA dispatches to divisions
 ```
+See `REPO-STRUCTURE.md` for the full map and `STATE-OF-THE-ORG-1.0.md` for the operating model + current state.
 
 ## The model in one breath
 The **founder/board** (the human) holds final authority on anything public or
