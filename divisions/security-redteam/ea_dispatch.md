@@ -4,8 +4,8 @@
 issuer: EA
 to: security-redteam
 command: crunch
-wo: claude-code-WO-sprint-2-cross-lister-demo.md
+wo: claude-code-WO-silent-5min-heartbeat-listeners.md
 step: -
-timestamp: 2026-06-21T05:37:19Z
-nonce: 65f3dd93
+timestamp: 2026-06-21T05:53:41Z
+nonce: 42d6eeeb
 ```
