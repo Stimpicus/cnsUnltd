@@ -1,7 +1,7 @@
 # Retrospective — EA onboarding + Standing-Orders rollout (2026-06-20)
 
 **By:** the EA (new chair). **Turn:** founding cycle (ledger D-054) + CEO Standing-Orders rollout
-(directive `63da9f9b`, ledger D-056). **Scope:** EA-side; first per-turn SO-3 retrospective.
+(directive `63da9f9b`, ledger D-057). **Scope:** EA-side; first per-turn SO-3 retrospective.
 
 ## What worked
 - **Verify-by-signature before acting.** Confirmed every recent `main` commit was `Good`-signed

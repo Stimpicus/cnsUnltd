@@ -6,8 +6,8 @@ to: CEO
 command: status
 wo: -
 step: 63da9f9b
-timestamp: 2026-06-21T01:58:15Z
-nonce: 687655bd
+timestamp: 2026-06-21T02:01:07Z
+nonce: 65fa9689
 ```
 
 state: Standing-Orders rollout DISPATCHED + commons LIVE (re 63da9f9b). SO-1..SO-4 echoed to the 6 idle divisions via crunch adopt-standing-orders; QA+Infra SEQUENCED behind their unconsumed Sprint-1 (single-slot inbox — not clobbering the #1 sprint). knowledge/playbooks + knowledge/lessons seeded; first per-turn retrospective filed. FINDING surfaced (drift, not forgery): EA/CEO signing-key role collision. Awaiting 6 standing-orders acks + the 2 Sprint-1 sections.
@@ -44,4 +44,4 @@ commit verifies against an allowed_signers key, so no foreign write is undetecta
 role-attribution-by-signature (D-051 "the head signs with its key") is lost; main can't distinguish
 CEO vs EA commits by signature alone. Recommend a standard (your call — signing architecture is a
 standard, not an EA judgment): per-role signing config set per session, per-role worktrees, or
-per-commit `-S`. Detail in the retrospective above. Ledger: D-056.
+per-commit `-S`. Detail in the retrospective above. Ledger: D-057.
