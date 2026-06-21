@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 # comms/listen.sh — canonical division bus listener (the cheap shell wait).
-# ONE copy, every division — retires the per-division ad-hoc poll scripts (same DRY
-# win as comms/bus.sh and the provisioner). READ-ONLY: polls THIS division's inbox on
-# origin/main and EXITS (re-invoking the agent) on a NEW dispatch or after --max
-# heartbeat polls. The agent runs this via its background primitive; on exit it
-# re-engages (resolve canonical bus from origin/main -> process the dispatch behind the
-# gate -> push the outbox -> relaunch this). See comms/LISTENER.md for the full pattern.
+# ONE copy, every division. ALWAYS-ON: a perpetual background loop that EXITS
+# (re-invoking the agent) ONLY when a NEW dispatch appears — never on a heartbeat.
+# WHY no heartbeat: in this harness EVERY background-command exit re-invokes the agent
+# and surfaces a turn the Founder sees (a ping). A heartbeat exit would therefore ping
+# the Founder on every cycle — that is the regression that made sessions choose between
+# pinging the Founder and going dark. The loop ends ONLY on a real dispatch (a turn
+# worth surfacing); liveness is the EA's job (comms/health.sh), not a self-heartbeat.
+# READ-ONLY. On a dispatch the agent re-engages (resolve canonical bus from origin/main
+# -> process behind the gate -> push the outbox -> relaunch this). See comms/LISTENER.md.
 set -uo pipefail
 
 # Anchor to the main clone (git's own path format) so EVERY read is branch- and
@@ -20,10 +23,10 @@ DIV="${BUS_DIV:-$(infer_div)}"
 INBOX="divisions/$DIV/ea_dispatch.md"
 OUTBOX="divisions/$DIV/division_dispatch.md"
 
-# --max: heartbeat after N polls. Default 8 (~8 min) is SIZED TO EXIT CLEANLY under the
-# agent's ~10-minute background-command ceiling — re-invocation on a clean exit is
-# reliable; a kill-on-timeout is not. Do NOT raise --max past that ceiling. POLL=60s.
-MAX="${1:-8}"
+# --max: 0 (default) = INDEFINITE — exit ONLY on a dispatch (the always-on, no-ping
+# standard). A POSITIVE --max heartbeats after N polls and is for DEBUG ONLY: it
+# re-invokes the agent (and pings the Founder) every N polls. Do not use it in prod.
+MAX="${1:-0}"
 POLL="${LISTEN_POLL_SECS:-60}"
 field(){ awk -v k="^$1:" '/^```dispatch/{f=1;next} /^```/{f=0} f&&$0~k{print $2;exit}'; }
 
@@ -38,6 +41,6 @@ while :; do
     echo "DISPATCH div=$DIV nonce=$inbox_nonce answered=${answered:-none}"; exit 0
   fi
   i=$((i+1))
-  if [ "$i" -ge "$MAX" ]; then echo "HEARTBEAT div=$DIV polls=$i (alive; no new dispatch)"; exit 0; fi
+  if [ "$MAX" -gt 0 ] && [ "$i" -ge "$MAX" ]; then echo "HEARTBEAT div=$DIV polls=$i (debug cap)"; exit 0; fi
   sleep "$POLL"
 done
