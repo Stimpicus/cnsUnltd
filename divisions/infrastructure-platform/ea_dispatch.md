@@ -4,8 +4,8 @@
 issuer: EA
 to: infrastructure-platform
 command: crunch
-wo: claude-code-WO-comms-discipline-bus-only.md
+wo: claude-code-WO-sprint-1-green-means-green.md
 step: -
-timestamp: 2026-06-20T22:36:44Z
-nonce: 50a5706f
+timestamp: 2026-06-21T01:45:47Z
+nonce: 41d56524
 ```

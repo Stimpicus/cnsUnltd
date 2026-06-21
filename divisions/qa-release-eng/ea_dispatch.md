@@ -4,8 +4,8 @@
 issuer: EA
 to: qa-release-eng
 command: crunch
-wo: claude-code-WO-comms-discipline-bus-only.md
+wo: claude-code-WO-sprint-1-green-means-green.md
 step: -
-timestamp: 2026-06-20T22:36:43Z
-nonce: 6a673f76
+timestamp: 2026-06-21T01:45:47Z
+nonce: 478d4c58
 ```
