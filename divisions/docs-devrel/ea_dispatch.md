@@ -6,6 +6,6 @@ to: docs-devrel
 command: crunch
 wo: claude-code-WO-adopt-standing-orders.md
 step: -
-timestamp: 2026-06-21T03:43:33Z
-nonce: 7f4e22a7
+timestamp: 2026-06-21T03:55:49Z
+nonce: 57b03a00
 ```

@@ -6,6 +6,6 @@ to: design-product
 command: crunch
 wo: claude-code-WO-adopt-standing-orders.md
 step: -
-timestamp: 2026-06-21T03:43:33Z
-nonce: 5dafa435
+timestamp: 2026-06-21T03:55:49Z
+nonce: 5406a912
 ```

@@ -6,6 +6,6 @@ to: security-redteam
 command: crunch
 wo: claude-code-WO-adopt-standing-orders.md
 step: -
-timestamp: 2026-06-21T03:43:32Z
-nonce: 70222798
+timestamp: 2026-06-21T03:55:48Z
+nonce: 48e833f7
 ```

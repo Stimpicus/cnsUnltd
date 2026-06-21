@@ -6,6 +6,6 @@ to: qa-release-eng
 command: crunch
 wo: claude-code-WO-adopt-standing-orders.md
 step: -
-timestamp: 2026-06-21T03:43:33Z
-nonce: 4ec68ec2
+timestamp: 2026-06-21T03:55:48Z
+nonce: 42cf76b0
 ```
