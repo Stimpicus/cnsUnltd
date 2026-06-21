@@ -82,8 +82,12 @@ bash comms/ea-hub-listen.sh 8      # watches the CEO inbox + the 8 division outb
   CEO), then **do the work** (Step 4 / break the CEO's WO into division dispatches).
 - On **HUB-EVENT `<division>/…`** → that division answered: `collect`, then integrate behind the gate.
 - On **HUB-HEARTBEAT** → **silently relaunch** (heartbeats are noise; do not narrate them).
-- **Do NOT** run the idle loop when there is genuinely no work in flight — it re-invokes you every
-  ~8 min for nothing. Listen when work is live; re-engage on demand when it is quiet.
+- **Run the listener PERPETUALLY** — relaunch on every exit (event *and* heartbeat); never let it go
+  dormant. There is no budget; a listener costs almost nothing; *if you're awake, you're listening.*
+  What is suppressed is the **alert**, not the listener: a heartbeat relaunches **silently** (no
+  Founder ping; do not narrate it). (Corrected per **D-059** — the earlier "do not run an idle loop /
+  re-engage on demand" wording conflated *don't ping the Founder* with *don't listen* and caused a
+  6/8-dark regression.)
 - Idempotency: `bash comms/ea-hub-listen.sh mark` records the current state as seen — **but do Step 4
   FIRST**, because there is already an unprocessed CEO directive waiting and you must not mark it
   seen without acting on it.

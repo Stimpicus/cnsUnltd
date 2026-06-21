@@ -4,6 +4,15 @@
 2026-06-20. **Status:** proposal + working reference (`comms/listen.sh`). The EA owns
 whether/how to standardize this org-wide; this is the knowledge-share, decision-ready.
 
+## The standard — ALWAYS-ON (D-059)
+**Every session (CEO, EA, every division) runs this listener PERPETUALLY** — relaunched on every exit
+(event *and* heartbeat), never dormant. There is no budget; a listener costs almost nothing; *if a
+session is awake, it is listening.* The heartbeat exists to **relaunch silently**, never to stop:
+what is suppressed is the Founder-facing **alert**, not the listener. (Corrects the earlier framing —
+elsewhere in this doc and in the re-engage protocol — that a session may stand down an "idle"
+listener; that conflated *don't ping the Founder* with *don't listen* and caused a 6/8-dark
+regression. D-059.)
+
 ## Why this exists
 Each division session became a bus listener on the listener boilerplate, and each
 rolled **its own** poll script (the same ad-hoc sprawl the provisioner and the bus

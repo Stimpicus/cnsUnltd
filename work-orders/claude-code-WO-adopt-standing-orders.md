@@ -16,9 +16,11 @@ Read `ceo/standing-orders.md` in full; the four orders, in force every cycle unt
 - **SO-3 — Continuous improvement.** Keep improving your **domain** practice and contribute your
   retrospective lessons to `knowledge/lessons/`. (The EA runs a lightweight retrospective at every
   integration; the CEO runs the deeper ~10-cycle leadership review.)
-- **SO-4 — Quiet listeners.** Run your listener **quietly** — surface only on a real need
-  (button / BLOCK / stall / drift / safety). No Founder pings, no idle-loops; listen while work is
-  live, re-engage on demand when it is quiet.
+- **SO-4 — Perpetual listeners, quietly.** Run your bus listener **perpetually** — relaunch on every
+  heartbeat, never go dormant (*if you're awake, you're listening*). What's suppressed is the
+  **alert**, not the listener: heartbeats relaunch **silently**; surface to the Founder only on a real
+  need (button / BLOCK / stall / drift / safety). (Corrected per **D-059** — the earlier "re-engage on
+  demand" wording caused a dark-listener regression.)
 
 ## ACK
 Acknowledge on your outbox (`bus.sh process` → `ack` re this dispatch's nonce). Then simply operate

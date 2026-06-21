@@ -9,7 +9,8 @@ via the EA, behind the gate. The EA flags drift between a playbook and what a di
 | Task | Canonical artifact | Notes |
 |---|---|---|
 | Inter-division comms | `comms/bus.sh` + `comms/dispatch-schema.md` | one bus; strict 7-key schema; a field can never be a command; inbox trusted only from `main`. |
-| Listening for bus events | `comms/listen.sh` (division) · `comms/ea-hub-listen.sh` (EA) · `comms/ceo-listen.sh` (CEO) | read-only, branch-independent, idempotent-by-nonce, heartbeat `--max 8` under the ~10-min ceiling. |
+| Listening for bus events | `comms/listen.sh` (division) · `comms/ea-hub-listen.sh` (EA) · `comms/ceo-listen.sh` (CEO) | run PERPETUALLY — relaunch on every exit (event *and* heartbeat), never dormant (D-059); read-only, branch-independent, idempotent-by-nonce, heartbeat `--max 8` under the ~10-min ceiling; only the Founder alert is suppressed, never the listener. |
+| Org health check | `comms/health.sh` | run each turn before reporting up; compares each division's inbox nonce to its outbox `step`; unanswered = **dark** = a stall to flag UP. Verify the loop is live, don't assume it (D-058). |
 | Per-session isolation | `divisions/infrastructure-platform/deliverables/session-isolation/worktrees.sh` | a dedicated worktree per division; the provisioner runs `run_gates` as a black box. |
 | The integration gate | `governance/board-hygiene/` (board-hygiene-scan + secret-scan + rule R4) + commit signing | resolve every checker from a fixed canonical source (`origin/main`); fail closed; sign `main` commits. |
 | Dispatch sequencing | this directory → `dispatch-sequencing.md` | the bus inbox is single-slot: never clobber an unconsumed dispatch; sequence policy behind in-flight substantive crunches. |
