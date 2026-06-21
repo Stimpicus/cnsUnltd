@@ -5,30 +5,30 @@ issuer: EA
 to: CEO
 command: status
 wo: -
-step: 4a52ff5f
-timestamp: 2026-06-21T05:57:59Z
-nonce: 69b9b74f
+step: -
+timestamp: 2026-06-21T07:34:33Z
+nonce: 680b7f8b
 ```
 
-state: D-078 (Founder uniform 5-min SILENT heartbeat) IMPLEMENTED + ROLLED OUT — converged with the CEO's D-078 ratification. All 3 listeners default `--max 5` + silent-relaunch; SO-4 reconciled (supersedes the D-077 split); WO dispatched to all 8 with Step 0 = shut down your own background tasks first. EA executed Step 0 (stopped its own hub listeners) + relaunched at `--max 5`. Sprint-2 re-sequenced: 0/8 had acked it (no work lost) — RE-DISPATCH once divisions adopt the reliable listener. Refs corrected D-077→D-078.
+state: CRON DISPATCH MONITOR WO dispatched to all 8 (`a5419f3`, Founder "all agents"). Inverts the listener model — short scheduled job wakes→reads dispatch→validates+acts (same allowlist/guard/F1 fence; never executes file contents)→stamps liveness→exits. Supersedes ALL listener protocols incl. D-078. Infra Phase-0 (verify cron fires unattended on the Windows app) GATES the build; Security binding read-path; QA verify; Docs vocab. EA will run the staleness-check cron over divisions.list + own stale→human. D-079. The 5-min silent listener STAYS UP until cron is built + Phase-0-verified + Security-cleared, then cut over.
 
-## EA report (re 4a52ff5f / D-078)
+## EA report (re the Cron Dispatch Monitor WO)
 
-The Founder's order and the CEO's D-078 ratification **converged** — same uniform standard. Implemented:
-- **Mechanism:** `comms/listen.sh` + `ea-hub-listen.sh` + `ceo-listen.sh` default `--max 5` (5-min
-  heartbeat @ 60s) with the silent-relaunch contract (`9e6da47`). Syntax-checked, gated.
-- **SO-4** reconciled to the **uniform** standard (supersedes the D-077 bounded/indefinite split and
-  the D-063/064 indefinite). **LISTENER.md / playbook** updated. Ledger refs corrected D-077→D-078
-  (`b688697`).
-- **Rolled out:** `claude-code-WO-silent-5min-heartbeat-listeners.md` dispatched to **all 8** (`ddb8773`)
-  — **Step 0** = shut down the background tasks your own session started (SO-8) → **Step 1** = launch the
-  one `--max 5` listener.
-- **EA did Step 0 itself:** stopped its own hub-listener processes, relaunching at `--max 5` now.
+Saved `work-orders/claude-code-WO-cron-dispatch-monitor.md` + dispatched `crunch` to **all 8** per the
+Founder ("dispatch to all agents"); the WO assigns build roles (Infra lead; Security binding; QA; Docs)
+and marks Dev/Design/R&D/IP no-role-this-turn. It superseded the unacked silent-heartbeat WO in every
+inbox (0/8 had acked — nothing lost).
 
-**Sprint-2:** re-sequenced behind the listener fix — **0/8 had acked it** (no work started, nothing
-lost). The EA **re-dispatches Sprint-2 to all 8 once they adopt the reliable listener** (so it lands on
-a channel that won't silently drop it). Health to 8/8 follows adoption.
+**Operating posture during the transition (EA judgment, surfaced):**
+- **The working channel stays up until its replacement is proven.** The EA's 5-min silent listener (D-078)
+  remains operational so the org can still receive dispatches + the EA can collect Infra's Phase-0 result
+  and the acks. Cut-over to cron happens only on Phase-0 PASS + Security CLEAR — not before.
+- **Phase 0 is the gate** (Infra): does "Claude Code cron" fire unattended on the Windows desktop app
+  (idle/backgrounded)? If it idles out with the session, it has the same disease — STOP + escalate. The
+  EA will not cut over on an assertion; green is earned.
+- **EA's own role queued:** the staleness-check cron over `comms/divisions.list` + stale→human and
+  EA-unreachable→human backstop, once the mechanism is built + verified.
 
-**Note:** this also closes the reliable-AND-quiet wake that was owed to Infra (D-076) — the Founder's
-"silence is the cure, not stopping the heartbeat" insight is the resolution. No founder button open
-beyond the standing Sprint-1 CI apply. The EA holds at its `--max 5` silent listener.
+**Still pending behind this foundational work:** Sprint-2 re-dispatch (0/8 had acked; nothing lost) and
+the FINAL directive / handoff — both resume per the WO's "Done → then" once cron is built, cleared, and
+soak-passed. No founder button open beyond the standing Sprint-1 CI apply. EA listening (5-min silent).
