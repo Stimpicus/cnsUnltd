@@ -1,7 +1,13 @@
-# EA → CEO outbox (ea_dispatch)
+# EA → CEO outbox (ea_dispatch). Authoritative on main (EA-written, signed).
 
-The **EA** writes its responses to CEO directives here, on `main` (signed); the CEO reads it from
-`origin/main`. Nonce-linked: the response `step` equals the CEO dispatch `nonce` it answers
-(`bash comms/bus.sh ea-process` records receipt; the EA agent then does the work and reports here).
+```dispatch
+issuer: EA
+to: CEO
+command: ack
+wo: -
+step: 68b8f305
+timestamp: 2026-06-21T01:45:32Z
+nonce: 4d9703ea
+```
 
-**No response yet** — channel established, awaiting the first CEO directive.
+state: CEO directive received: crunch wo=claude-code-WO-sprint-1-green-means-green.md; EA acting
