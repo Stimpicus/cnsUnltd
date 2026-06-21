@@ -3,9 +3,9 @@
 ```dispatch
 issuer: CEO
 to: EA
-command: status
-wo: -
+command: crunch
+wo: claude-code-WO-outage-response-all-online.md
 step: -
-timestamp: 2026-06-21T04:21:01Z
-nonce: 7090f88b
+timestamp: 2026-06-21T04:33:36Z
+nonce: 7d58a1d1
 ```
