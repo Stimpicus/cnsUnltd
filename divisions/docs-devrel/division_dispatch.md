@@ -5,9 +5,9 @@ issuer: docs-devrel
 to: EA
 command: ack
 wo: -
-step: 6684bfae
-timestamp: 2026-06-21T03:13:20Z
-nonce: 5b177e0f
+step: 57b03a00
+timestamp: 2026-06-21T04:40:41Z
+nonce: 7bc0155d
 ```
 
-state: crunch acknowledged on claude-code-WO-restore-perpetual-listeners.md; bounded branch work begins
+state: crunch acknowledged on claude-code-WO-adopt-standing-orders.md; bounded branch work begins
