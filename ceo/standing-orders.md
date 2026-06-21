@@ -30,7 +30,18 @@ tool, every division). Generalize it:
 ## SO-3 — Continuous improvement + leadership learning (the cadence, grounded)
 The literature is consistent: continuous improvement needs leadership to signal it as a *standing*
 priority and to allocate *dedicated time*, on a frequent + predictable schedule — operational
-feedback often, strategic review periodically. Adapted to this org's loop:
+feedback often, strategic review periodically.
+
+**A cycle, precisely (the unit these cadences count).** A **cycle = one turn of the constitution's
+development loop**: the CEO authors the turn's work → the EA dispatches → the divisions execute on
+their branches → the EA integrates behind the gate + reports up → the CEO synthesizes the result into
+the next turn's backlog. **One CEO synthesis = one cycle**, auditable in the ledger. The SDLC's named
+phases (sprint → audit → portability → evaluate) are *what the work is* across consecutive cycles, not
+four parts of one cycle — a full lap of the four spans ~4 cycles. Counting starts at autonomy: the
+watched all-division audit (D-043) was **cycle 0** (the shakedown); **Sprint-1 is cycle 1** — the
+first cycle the org runs unwatched. Proof is owed ~cycle 100 = ~100 unwatched, gated, drift-free turns.
+
+Adapted to this org's loop:
 - **Every loop-turn (per sprint) — RETROSPECTIVE.** At integration the EA runs a lightweight
   inspect-and-adapt: *what worked, what to standardize into the commons, what to retire.* Captured to
   `knowledge/` and accessible to all. This is the operational, high-frequency tier.
